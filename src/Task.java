@@ -5,8 +5,8 @@ import java.util.Date;
 public class Task {
     private int ID;
     private String name;
-    private int estimatedTime;
-    private int priority;
+    private int estimatedTime;  // 5 min, 10 min, 15 min, etc.
+    private int priority;       // 1-2-3
     private String creationDate;
     private String createdBy;
     private String editDate;

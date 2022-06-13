@@ -3,11 +3,13 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class ListOfTasks {
 
+    private static ArrayList<Task> listToDo = new ArrayList<>();
     private static ArrayList<Task> listOfShortTasks = new ArrayList<>();
     private static ArrayList<Integer> listIdOfShortTasks = new ArrayList<>();
     private static ArrayList<Task> listOfLongTasks = new ArrayList<>();
@@ -148,5 +150,15 @@ public class ListOfTasks {
 
     public static Task getFirstLongTask(){
         return getListOfLongTasks().get(0);
+    }
+
+    public static void sortTasks() {
+        ArrayList<Task> tmp = getListOfShortTasks();
+        ArrayList<Task> tmp2;
+        boolean sorted;
+        for (int i = 0; i < tmp.size(); i++) {
+            if (tmp.get(i).getPriority() == 3);
+        }
+
     }
 }

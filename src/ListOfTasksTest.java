@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import java.beans.Transient;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 
@@ -36,7 +37,7 @@ class ListOfTasksTest {
         ListOfTasks.addTaskToList(new Task(1, 5, 3));
         ListOfTasks.addTaskToList(new Task(2, 15, 2));
         ListOfTasks.addTaskToList(new Task(3, 30, 3));
-        ListOfTasks.addTaskToList(new Task(4, 10, 3));
+        ListOfTasks.addTaskToList(new Task(4, 10, 1));
         ListOfTasks.addTaskToList(new Task(5, 45, 3));
         
         ListOfTasks.saveTasksLists();
@@ -47,5 +48,17 @@ class ListOfTasksTest {
 
 //        ListOfTasks.loadTasksLists();
 //        ListOfTasks.printListOfTasks(ListOfTasks.getListOfShortTasks());
+    }
+
+    @Test
+    void test() {
+        ListOfTasks.addTaskToList(new Task(7, 5, 3));
+        ListOfTasks.addTaskToList(new Task(9, 15, 2));
+        ListOfTasks.addTaskToList(new Task(13, 20, 3));
+        ListOfTasks.addTaskToList(new Task(1, 10, 1));
+        ListOfTasks.addTaskToList(new Task(5, 15, 3));
+
+        ListOfTasks.sortTasks();
+
     }
 }
