@@ -1,32 +1,38 @@
 import java.util.Scanner;
 
 public class Pomodoro {
-//    private int workTime = 25 * 60;         // seconds
-    private int workTime = 5;         // seconds
-//    private int shortBreakTime = 5 * 60;    // seconds
-//    private int longBreakTime = 15 * 60;    // seconds
-    private int shortBreakTime = 3;    // seconds
-    private int longBreakTime = 5;    // seconds
+    private int workTime = 25 * 60;         // seconds
+    private int shortBreakTime = 5 * 60;    // seconds
+    private int longBreakTime = 15 * 60;    // seconds
     private boolean workPhase = true;
     private boolean breakPhase = false;
     private int endedWorkPhases = 0;
-    private static int timeLeft;            // seconds
+    private int timeLeft;
 
     public Pomodoro(){}
 
-    public int getWorkTime() {
-        return workTime / 60;  // return in minutes
+    public int getWorkTimeMinutes() {
+        return workTime / 60;
     }
 
-    public int getShortBreakTime() {
-        return shortBreakTime / 60;  // return in minutes
+    public int getShortBreakTimeMinutes() {
+        return shortBreakTime / 60;
     }
 
-    public int getLongBreakTime() {
-        return longBreakTime / 60;  // return in minutes
+    public int getLongBreakTimeMinutes() {
+        return longBreakTime / 60;
     }
 
-    public void setWorkTime(int minutes) {
+    public int getTimeLeftMinutes() {
+        if(timeLeft % 60 == 0) {
+            return timeLeft / 60;
+        }
+        else {
+            return (timeLeft / 60) + 1;
+        }
+    }
+
+    public void setWorkTimeMinutes(int minutes) {
         this.workTime = minutes * 60;  // minutes -> seconds
     }
 
@@ -34,12 +40,24 @@ public class Pomodoro {
         this.workTime = seconds;
     }
 
-    public void setShortBreakTime(int minutes) {
+    public void setShortBreakTimeMinutes(int minutes) {
         this.shortBreakTime = minutes * 60;  // minutes -> seconds
     }
 
-    public void setLongBreakTime(int minutes) {
+    public void setShortBreakTimeSeconds(int seconds) {
+        this.shortBreakTime = seconds;
+    }
+
+    public void setLongBreakTimeMinutes(int minutes) {
         this.longBreakTime = minutes * 60;  // minutes -> seconds
+    }
+
+    public void setLongBreakTimeSeconds(int seconds) {
+        this.longBreakTime = seconds;
+    }
+
+    public void setTimeLeft(int seconds) {
+        timeLeft = seconds;
     }
 
     public boolean isWorkPhase() {
@@ -65,20 +83,23 @@ public class Pomodoro {
     public void setEndedWorkPhases(int endedWorkPhases) {
         this.endedWorkPhases = endedWorkPhases;
     }
-    public static void setTimeLeft(int seconds) {
-        timeLeft = seconds;
-    }
+
 
     public boolean pomodoroWork(){
-        Thread countdownThread = new Thread(() -> workPhase = !Timer.countdown(workTime));
+        long startTime = System.currentTimeMillis();
+        timeLeft = workTime;
+        int tmpTime = 0;
+//        System.out.println("stay focused: " + timeLeft);
 
-        countdownThread.start();
-
-        int tmpTimeLeft = 0;
-        while (workPhase) {
-            if (tmpTimeLeft != timeLeft) {
-                tmpTimeLeft = timeLeft;
-                System.out.println("stay focused: " + tmpTimeLeft);
+        while (timeLeft > 0) {
+            if ((System.currentTimeMillis() - startTime) >= 1000) {
+                timeLeft--;
+                startTime = System.currentTimeMillis();
+//                System.out.println("stay focused: " + timeLeft);
+            }
+            if (tmpTime != getTimeLeftMinutes()) {
+                tmpTime = getTimeLeftMinutes();
+                System.out.println("time to focused: " + tmpTime + " min");
             }
         }
         endedWorkPhases ++;
@@ -91,16 +112,20 @@ public class Pomodoro {
             breakTime = longBreakTime;
         }
 
-        int finalBreakTime = breakTime;
-        Thread countdownThread = new Thread(() -> breakPhase = !Timer.countdown(finalBreakTime));
+        long startTime = System.currentTimeMillis();
+        timeLeft = breakTime;
+        int tmpTime = 0;
+//        System.out.println("time to rest: " + timeLeft);
 
-        countdownThread.start();
-
-        int tmpTimeLeft = 0;
-        while (breakPhase) {
-            if (tmpTimeLeft != timeLeft) {
-                tmpTimeLeft = timeLeft;
-                System.out.println("time to rest: " + tmpTimeLeft);
+        while (timeLeft > 0) {
+            if ((System.currentTimeMillis() - startTime) >= 1000) {
+                timeLeft--;
+                startTime = System.currentTimeMillis();
+//                System.out.println("time to rest: " + timeLeft);
+            }
+            if (tmpTime != getTimeLeftMinutes()) {
+                tmpTime = getTimeLeftMinutes();
+                System.out.println("time to rest: " + tmpTime + " min");
             }
         }
         return true;
@@ -109,9 +134,11 @@ public class Pomodoro {
     public void start() {
         if (workPhase) {
             breakPhase = pomodoroWork();
+            workPhase = !breakPhase;
         }
         else {
             workPhase = pomodoroBreak();
+            breakPhase = !workPhase;
         }
     }
 
@@ -119,20 +146,32 @@ public class Pomodoro {
         System.out.println("""
                 select:
                 0 - start
+                1 - set a work time
+                2 - set a short break time
+                3 - set a long break time
                 9 - exit""");
     }
+
+//    public Thread displayTime() {
+//        int tmpTime = 99;
+//        while(tmpTime !=0) {
+//            if (tmpTime != getTimeLeftMinutes()) {
+//                tmpTime = getTimeLeftMinutes();
+//                if (isWorkPhase()) {
+//                    System.out.println("stay focused: " + tmpTime + " min");
+//                }
+//                else {
+//                    System.out.println("time to rest: " + tmpTime + " min");
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     public static void main(String[] args) {
         Pomodoro pomodoro = new Pomodoro();
 
-        for (int i = 1; i < 10; i++) {
-            System.out.println("i = " + i);
-            pomodoro.start();
-            System.out.println(pomodoro.getEndedWorkPhases());
-        }
-
-
-        int selectedOption = 0;
+        int selectedOption = 8;
 
         System.out.println("pomodoro timer");
 
@@ -148,9 +187,35 @@ public class Pomodoro {
 
             System.out.print("input number: ");
             selectedOption = scanner.nextInt();
-            if (selectedOption == 0) {
-                pomodoro.start();
-                System.out.println();
+
+//            pomodoro.setWorkTimeMinutes(2);
+//            pomodoro.setWorkTimeSeconds(15);
+//            pomodoro.setShortBreakTimeMinutes(2);
+//            pomodoro.setShortBreakTimeMinutes(2);
+
+            switch (selectedOption) {
+                case 0 -> {
+//                    new Thread(pomodoro::displayTime).start();
+                    pomodoro.start();
+                    System.out.println();
+                }
+                case 1 -> {
+                    System.out.println("current work time: " + pomodoro.getWorkTimeMinutes());
+                    System.out.print("input new work time: ");
+                    pomodoro.setWorkTimeMinutes(scanner.nextInt());
+                }
+                case 2 -> {
+                    System.out.println("current short break time: " + pomodoro.getShortBreakTimeMinutes());
+                    System.out.print("input new short break time: ");
+                    pomodoro.setShortBreakTimeMinutes(scanner.nextInt());
+                }
+                case 3 -> {
+                    System.out.println("current long break time: " + pomodoro.getLongBreakTimeMinutes());
+                    System.out.print("input new long break time: ");
+                    pomodoro.setLongBreakTimeMinutes(scanner.nextInt());
+                }
+                case 9 -> System.out.println("thanks for use");
+                default -> System.out.println("input correct number");
             }
         }
         scanner.close();
