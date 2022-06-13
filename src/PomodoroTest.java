@@ -33,27 +33,26 @@ class PomodoroTest {
         assertTimeout(Duration.ofMillis(1010L * seconds), () -> pomodoro.pomodoroBreak());
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {1, 5, 10, 15, 30})
-    void pomodoroWorkMinutes(int minutes) {
-        pomodoro.setWorkTimeMinutes(minutes);
-        int seconds = minutes * 60;
-        assertTimeout(Duration.ofMillis(60600L * minutes), () -> pomodoro.pomodoroWork());
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {1, 5, 10, 15, 30})
-    void pomodoroShortBreakMinutes(int minutes) {
-        pomodoro.setShortBreakTimeMinutes(minutes);
-        pomodoro.setLongBreakTimeMinutes(0);
-        assertTimeout(Duration.ofMillis(60600L * minutes), () -> pomodoro.pomodoroBreak());
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {4, 8, 12, 16})
-    void pomodoroLongBreakMinutes(int minutes) {
-        pomodoro.setShortBreakTimeMinutes(0);
-        pomodoro.setLongBreakTimeMinutes(minutes);
-        assertTimeout(Duration.ofMillis(60600L * minutes), () -> pomodoro.pomodoroBreak());
-    }
+//    @ParameterizedTest
+//    @ValueSource(ints = {1, 5, 10, 15, 30})
+//    void pomodoroWorkMinutes(int minutes) {
+//        pomodoro.setWorkTimeMinutes(minutes);
+//        assertTimeout(Duration.ofMillis(60600L * minutes), () -> pomodoro.pomodoroWork());
+//    }
+//
+//    @ParameterizedTest
+//    @ValueSource(ints = {1, 5, 10, 15, 30})
+//    void pomodoroShortBreakMinutes(int minutes) {
+//        pomodoro.setShortBreakTimeMinutes(minutes);
+//        pomodoro.setLongBreakTimeMinutes(0);
+//        assertTimeout(Duration.ofMillis(60600L * minutes), () -> pomodoro.pomodoroBreak());
+//    }
+//
+//    @ParameterizedTest
+//    @ValueSource(ints = {4, 8, 12, 16})
+//    void pomodoroLongBreakMinutes(int minutes) {
+//        pomodoro.setShortBreakTimeMinutes(0);
+//        pomodoro.setLongBreakTimeMinutes(minutes);
+//        assertTimeout(Duration.ofMillis(60600L * minutes), () -> pomodoro.pomodoroBreak());
+//    }
 }
