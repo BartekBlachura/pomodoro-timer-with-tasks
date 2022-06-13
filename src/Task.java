@@ -5,7 +5,7 @@ import java.util.Date;
 public class Task {
     private int ID;
     private String name;
-    private int estimatedTime;  // 5 min, 10 min, 15 min, etc.
+    private boolean shortTask;
     private int priority;       // 1-2-3
     private String creationDate;
     private String createdBy;
@@ -30,12 +30,12 @@ public class Task {
         this.name = name;
     }
 
-    public int getEstimatedTime() {
-        return estimatedTime;
+    public boolean isShortTask() {
+        return shortTask;
     }
 
-    public void setEstimatedTime(int estimatedTime) {
-        this.estimatedTime = estimatedTime;
+    public void setShortTask(boolean shortTask) {
+        this.shortTask = shortTask;
     }
 
     public int getPriority() {
@@ -78,10 +78,10 @@ public class Task {
         this.editedBy = editedBy;
     }
 
-    public Task(int ID, String name, int estimatedTime, int priority, String createdBy) {
+    public Task(int ID, String name, boolean shortTask, int priority, String createdBy) {
         this.ID = ID;
         this.name = name;
-        this.estimatedTime = estimatedTime;
+        this.shortTask = shortTask;
         this.priority = priority;
         this.creationDate = sdf.format(new Date());
         this.createdBy = createdBy;
@@ -92,7 +92,7 @@ public class Task {
     public Task(String[] taskTable) throws ParseException {
         this.ID = Integer.parseInt(taskTable[0]);
         this.name = taskTable[1];
-        this.estimatedTime = Integer.parseInt(taskTable[2]);
+        this.shortTask = Boolean.parseBoolean(taskTable[2]);
         this.priority = Integer.parseInt(taskTable[3]);
         this.creationDate = taskTable[4];
         this.createdBy = taskTable[5];
@@ -100,14 +100,16 @@ public class Task {
         this.editedBy = taskTable[7];
     }
 
-    public Task(int ID, int estimatedTime, int priority) {
+    public Task(int ID, boolean shortTask, int priority) {
         this.ID = ID;
         this.name = "test task no " + ID;
-        this.estimatedTime = estimatedTime;
+        this.shortTask = shortTask;
         this.priority = priority;
         this.creationDate = sdf.format(new Date());
         this.createdBy = "Bartek";
         this.editDate = creationDate;
         this.editedBy = createdBy;
     }
+
+
 }

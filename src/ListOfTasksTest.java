@@ -34,17 +34,23 @@ class ListOfTasksTest {
 
     @Test
     void saveTasksLists() throws FileNotFoundException {
-        ListOfTasks.addTaskToList(new Task(1, 5, 3));
-        ListOfTasks.addTaskToList(new Task(2, 15, 2));
-        ListOfTasks.addTaskToList(new Task(3, 30, 3));
-        ListOfTasks.addTaskToList(new Task(4, 10, 1));
-        ListOfTasks.addTaskToList(new Task(5, 45, 3));
+        ListOfTasks.addTaskToList(new Task(7, true, 1));
+        ListOfTasks.addTaskToList(new Task(9, true, 2));
+        ListOfTasks.addTaskToList(new Task(13, true, 3));
+        ListOfTasks.addTaskToList(new Task(1, true, 1));
+        ListOfTasks.addTaskToList(new Task(5, true, 3));
+
+        ListOfTasks.addTaskToList(new Task(5, false, 1));
+        ListOfTasks.addTaskToList(new Task(6, false, 2));
+        ListOfTasks.addTaskToList(new Task(2, false, 3));
+        ListOfTasks.addTaskToList(new Task(8, false, 1));
+        ListOfTasks.addTaskToList(new Task(20, false, 3));
         
         ListOfTasks.saveTasksLists();
 
-        ListOfTasks.printListOfTasks(ListOfTasks.getListOfShortTasks());
-        ListOfTasks.printListOfTasks(ListOfTasks.getListOfLongTasks());
-        ListOfTasks.printListOfTasks(ListOfTasks.getListOfCompletedTasks());
+//        ListOfTasks.printListOfTasks(ListOfTasks.getListOfShortTasks());
+//        ListOfTasks.printListOfTasks(ListOfTasks.getListOfLongTasks());
+//        ListOfTasks.printListOfTasks(ListOfTasks.getListOfCompletedTasks());
 
 //        ListOfTasks.loadTasksLists();
 //        ListOfTasks.printListOfTasks(ListOfTasks.getListOfShortTasks());
@@ -52,13 +58,23 @@ class ListOfTasksTest {
 
     @Test
     void test() {
-        ListOfTasks.addTaskToList(new Task(7, 5, 3));
-        ListOfTasks.addTaskToList(new Task(9, 15, 2));
-        ListOfTasks.addTaskToList(new Task(13, 20, 3));
-        ListOfTasks.addTaskToList(new Task(1, 10, 1));
-        ListOfTasks.addTaskToList(new Task(5, 15, 3));
+        ListOfTasks.addTaskToList(new Task(7, true, 1));
+        ListOfTasks.addTaskToList(new Task(9, true, 2));
+        ListOfTasks.addTaskToList(new Task(13, true, 3));
+        ListOfTasks.addTaskToList(new Task(1, true, 1));
+        ListOfTasks.addTaskToList(new Task(5, true, 3));
 
-        ListOfTasks.sortTasks();
+        ListOfTasks.addTaskToList(new Task(5, false, 1));
+        ListOfTasks.addTaskToList(new Task(6, false, 2));
+        ListOfTasks.addTaskToList(new Task(2, false, 3));
+        ListOfTasks.addTaskToList(new Task(8, false, 1));
+        ListOfTasks.addTaskToList(new Task(20, false, 3));
 
+        ListOfTasks.printListOfTasks(ListOfTasks.getListOfShortTasks());
+        ListOfTasks.printListOfTasks(ListOfTasks.getListOfLongTasks());
+        ListOfTasks.sortTasksByPriority();
+        System.out.println("sorted");
+        ListOfTasks.printListOfTasks(ListOfTasks.getListOfShortTasks());
+        ListOfTasks.printListOfTasks(ListOfTasks.getListOfLongTasks());
     }
 }

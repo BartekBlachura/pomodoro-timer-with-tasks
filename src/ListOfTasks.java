@@ -3,8 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Scanner;
 
 public class ListOfTasks {
@@ -35,19 +33,20 @@ public class ListOfTasks {
     }
 
     public static void addTaskToList(Task task) {
-        if (task.getEstimatedTime() < Pomodoro.getWorkTimeMinutes()) {
+        if (task.isShortTask()) {
             listOfShortTasks.add(task);
         }
         else {
             listOfLongTasks.add(task);
         }
+        sortTasksByPriority();
     }
 
     public static void printListOfTasks(ArrayList<Task> listOfTasks) {
         for (Task task : listOfTasks) {
             System.out.println("task no: "+task.getID()
                     +" | name: "+task.getName()
-                    +" | estimated time: "+task.getEstimatedTime()
+                    +" | short task: "+task.isShortTask()
                     +" | priority: "+task.getPriority()
                     +" | creation date: "+task.getCreationDate()
                     +" | created by: "+task.getCreatedBy()
@@ -86,6 +85,8 @@ public class ListOfTasks {
             listIdOfCompletedTasks.add(Integer.valueOf(tmpTask[0]));
         }
         scanner.close();
+
+        sortTasksByPriority();
     }
 
     public static void saveTasksLists() throws FileNotFoundException {
@@ -95,7 +96,7 @@ public class ListOfTasks {
         for (Task task : listOfShortTasks) {
             printWriter.println(task.getID()+splitMark
                     +task.getName()+splitMark
-                    +task.getEstimatedTime()+splitMark
+                    +task.isShortTask()+splitMark
                     +task.getPriority()+splitMark
                     +task.getCreationDate()+splitMark
                     +task.getCreatedBy()+splitMark
@@ -108,7 +109,7 @@ public class ListOfTasks {
         for (Task task : listOfLongTasks) {
             printWriter.println(task.getID()+splitMark
                     +task.getName()+splitMark
-                    +task.getEstimatedTime()+splitMark
+                    +task.isShortTask()+splitMark
                     +task.getPriority()+splitMark
                     +task.getCreationDate()+splitMark
                     +task.getCreatedBy()+splitMark
@@ -121,7 +122,7 @@ public class ListOfTasks {
         for (Task task : listOfCompletedTasks) {
             printWriter.println(task.getID()+splitMark
                     +task.getName()+splitMark
-                    +task.getEstimatedTime()+splitMark
+                    +task.isShortTask()+splitMark
                     +task.getPriority()+splitMark
                     +task.getCreationDate()+splitMark
                     +task.getCreatedBy()+splitMark
@@ -142,6 +143,7 @@ public class ListOfTasks {
             listOfCompletedTasks.add(listOfLongTasks.get(index));
             listOfLongTasks.remove(index);
         }
+        sortTasksByPriority();
     }
 
     public static Task getFirstShortTask(){
@@ -152,13 +154,24 @@ public class ListOfTasks {
         return getListOfLongTasks().get(0);
     }
 
-    public static void sortTasks() {
-        ArrayList<Task> tmp = getListOfShortTasks();
-        ArrayList<Task> tmp2;
-        boolean sorted;
-        for (int i = 0; i < tmp.size(); i++) {
-            if (tmp.get(i).getPriority() == 3);
-        }
+    public static void sortTasksByPriority() {
 
+        ArrayList<Task> tmpShort = new ArrayList<>();
+        ArrayList<Task> tmpLong = new ArrayList<>();
+
+        for (int priority = 3; priority > 0; priority--) {
+            for (Task task: listOfShortTasks) {
+                if (task.getPriority() == priority) {
+                    tmpShort.add(task);
+                }
+            }
+            for (Task task: listOfLongTasks) {
+                if (task.getPriority() == priority) {
+                    tmpLong.add(task);
+                }
+            }
+        }
+        listOfShortTasks = tmpShort;
+        listOfLongTasks = tmpLong;
     }
 }
