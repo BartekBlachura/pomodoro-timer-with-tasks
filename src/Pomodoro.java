@@ -1,7 +1,7 @@
 public class Pomodoro {
-    private int workTime = 25 * 60;         // seconds
-    private int shortBreakTime = 5 * 60;    // seconds
-    private int longBreakTime = 15 * 60;    // seconds
+    private static int workTime = 25 * 60;         // seconds
+    private static int shortBreakTime = 5 * 60;    // seconds
+    private static int longBreakTime = 15 * 60;    // seconds
     private boolean workPhase = true;
     private boolean breakPhase = false;
     private int endedWorkPhases = 0;
@@ -9,15 +9,15 @@ public class Pomodoro {
 
     public Pomodoro(){}
 
-    public int getWorkTimeMinutes() {
+    public static int getWorkTimeMinutes() {
         return workTime / 60;
     }
 
-    public int getShortBreakTimeMinutes() {
+    public static int getShortBreakTimeMinutes() {
         return shortBreakTime / 60;
     }
 
-    public int getLongBreakTimeMinutes() {
+    public static int getLongBreakTimeMinutes() {
         return longBreakTime / 60;
     }
 

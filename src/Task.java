@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Task {
@@ -6,13 +7,12 @@ public class Task {
     private String name;
     private int estimatedTime;
     private int priority;
-    private Date creationDate;
+    private String creationDate;
     private String createdBy;
-    private Date editDate;
+    private String editDate;
     private String editedBy;
 
-    private ArrayList<Task> listOfShortTasks = new ArrayList<>();
-    private ArrayList<Task> listOfLongTasks = new ArrayList<>();
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss zzz");
 
     public int getID() {
         return ID;
@@ -46,12 +46,12 @@ public class Task {
         this.priority = priority;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
     public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+        this.creationDate = sdf.format(creationDate);
     }
 
     public String getCreatedBy() {
@@ -62,12 +62,12 @@ public class Task {
         this.createdBy = createdBy;
     }
 
-    public Date getEditDate() {
+    public String getEditDate() {
         return editDate;
     }
 
     public void setEditDate(Date editDate) {
-        this.editDate = editDate;
+        this.editDate = sdf.format(editDate);
     }
 
     public String getEditedBy() {
@@ -78,25 +78,36 @@ public class Task {
         this.editedBy = editedBy;
     }
 
-    public Task() {
-    }
-
-    public Task(int ID, String name, int estimatedTime, int priority, Date creationDate, String createdBy, Date editDate, String editedBy) {
+    public Task(int ID, String name, int estimatedTime, int priority, String createdBy) {
         this.ID = ID;
         this.name = name;
         this.estimatedTime = estimatedTime;
         this.priority = priority;
-        this.creationDate = creationDate;
+        this.creationDate = sdf.format(new Date());
         this.createdBy = createdBy;
-        this.editDate = editDate;
-        this.editedBy = editedBy;
+        this.editDate = creationDate;
+        this.editedBy = createdBy;
+    }
+
+    public Task(String[] taskTable) throws ParseException {
+        this.ID = Integer.parseInt(taskTable[0]);
+        this.name = taskTable[1];
+        this.estimatedTime = Integer.parseInt(taskTable[2]);
+        this.priority = Integer.parseInt(taskTable[3]);
+        this.creationDate = taskTable[4];
+        this.createdBy = taskTable[5];
+        this.editDate = taskTable[6];
+        this.editedBy = taskTable[7];
     }
 
     public Task(int ID, int estimatedTime, int priority) {
         this.ID = ID;
+        this.name = "test task no " + ID;
         this.estimatedTime = estimatedTime;
         this.priority = priority;
-
-        listOfShortTasks.add(this);
+        this.creationDate = sdf.format(new Date());
+        this.createdBy = "Bartek";
+        this.editDate = creationDate;
+        this.editedBy = createdBy;
     }
 }
