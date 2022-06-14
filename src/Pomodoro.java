@@ -135,14 +135,4 @@ public class Pomodoro {
             breakPhase = !workPhase;
         }
     }
-
-    public void displayMenu() {
-        System.out.println("""
-                select:
-                0 - start
-                1 - set a work time
-                2 - set a short break time
-                3 - set a long break time
-                9 - exit""");
-    }
 }

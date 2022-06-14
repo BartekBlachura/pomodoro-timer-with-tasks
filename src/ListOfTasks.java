@@ -7,42 +7,42 @@ import java.util.Scanner;
 
 public class ListOfTasks {
 
-    private static ArrayList<Task> listToDo = new ArrayList<>();
-    private static ArrayList<Task> listOfShortTasks = new ArrayList<>();
-    private static ArrayList<Integer> listIdOfShortTasks = new ArrayList<>();
-    private static ArrayList<Task> listOfLongTasks = new ArrayList<>();
-    private static ArrayList<Integer> listIdOfLongTasks = new ArrayList<>();
-    private static ArrayList<Task> listOfCompletedTasks = new ArrayList<>();
-    private static ArrayList<Integer> listIdOfCompletedTasks = new ArrayList<>();
-    private static String pathListOfShortTasks = "short-tasks.txt";
-    private static String pathListOfLongTasks = "long-tasks.txt";
-    private static String pathListOfCompletedTasks = "completed-tasks.txt";
-    private static String splitMark = "###";
+    private ArrayList<Task> listToDo = new ArrayList<>();
+    private ArrayList<Task> listOfShortTasks = new ArrayList<>();
+    private ArrayList<Integer> listIdOfShortTasks = new ArrayList<>();
+    private ArrayList<Task> listOfLongTasks = new ArrayList<>();
+    private ArrayList<Integer> listIdOfLongTasks = new ArrayList<>();
+    private ArrayList<Task> listOfCompletedTasks = new ArrayList<>();
+    private ArrayList<Integer> listIdOfCompletedTasks = new ArrayList<>();
+    private String pathListOfShortTasks = "short-tasks.txt";
+    private String pathListOfLongTasks = "long-tasks.txt";
+    private String pathListOfCompletedTasks = "completed-tasks.txt";
+    private String splitMark = "###";
 
 
-    public static ArrayList<Task> getListOfShortTasks() {
+    public ArrayList<Task> getListOfShortTasks() {
         return listOfShortTasks;
     }
 
-    public static ArrayList<Task> getListOfLongTasks() {
+    public ArrayList<Task> getListOfLongTasks() {
         return listOfLongTasks;
     }
 
-    public static ArrayList<Task> getListOfCompletedTasks() {
+    public ArrayList<Task> getListOfCompletedTasks() {
         return listOfCompletedTasks;
     }
 
-    public static void addTaskToList(Task task) {
+    public void addTaskToList(Task task) {
         if (task.isShortTask()) {
             listOfShortTasks.add(task);
         }
         else {
             listOfLongTasks.add(task);
         }
-        sortTasksByPriority();
     }
 
-    public static void printListOfTasks(ArrayList<Task> listOfTasks) {
+    public void printListOfTasks(ArrayList<Task> listOfTasks) {
+//        TODO if list is null!
         for (Task task : listOfTasks) {
             System.out.println("task no: "+task.getID()
                     +" | name: "+task.getName()
@@ -55,41 +55,55 @@ public class ListOfTasks {
         }
     }
 
-    public static void loadTasksLists() throws FileNotFoundException, ParseException {
+    public void loadTasksLists(){
         Scanner scanner;
         String[] tmpTask;
 
-        scanner = new Scanner(new File(pathListOfShortTasks));
-        listOfShortTasks.clear();
-        while (scanner.hasNextLine()){
-            tmpTask = scanner.nextLine().split(splitMark);
-            listOfShortTasks.add(new Task(tmpTask));
-            listIdOfShortTasks.add(Integer.valueOf(tmpTask[0]));
+        try {
+            scanner = new Scanner(new File(pathListOfShortTasks));
+            listOfShortTasks.clear();
+            while (scanner.hasNextLine()) {
+                tmpTask = scanner.nextLine().split(splitMark);
+                listOfShortTasks.add(new Task(tmpTask));
+                listIdOfShortTasks.add(Integer.valueOf(tmpTask[0]));
+            }
+            scanner.close();
         }
-        scanner.close();
-
-        scanner = new Scanner(new File(pathListOfLongTasks));
-        listOfLongTasks.clear();
-        while (scanner.hasNextLine()){
-            tmpTask = scanner.nextLine().split(splitMark);
-            listOfLongTasks.add(new Task(tmpTask));
-            listIdOfLongTasks.add(Integer.valueOf(tmpTask[0]));
+        catch (Exception e) {
+            System.out.println("failed to load the short task list");
         }
-        scanner.close();
 
-        scanner = new Scanner(new File(pathListOfCompletedTasks));
-        listOfCompletedTasks.clear();
-        while (scanner.hasNextLine()){
-            tmpTask = scanner.nextLine().split(splitMark);
-            listOfCompletedTasks.add(new Task(tmpTask));
-            listIdOfCompletedTasks.add(Integer.valueOf(tmpTask[0]));
+
+        try {
+            scanner = new Scanner(new File(pathListOfLongTasks));
+            listOfLongTasks.clear();
+            while (scanner.hasNextLine()){
+                tmpTask = scanner.nextLine().split(splitMark);
+                listOfLongTasks.add(new Task(tmpTask));
+                listIdOfLongTasks.add(Integer.valueOf(tmpTask[0]));
+            }
+            scanner.close();
         }
-        scanner.close();
+        catch (Exception e) {
+            System.out.println("failed to load the long task list");
+        }
 
-        sortTasksByPriority();
+        try {
+            scanner = new Scanner(new File(pathListOfCompletedTasks));
+            listOfCompletedTasks.clear();
+            while (scanner.hasNextLine()){
+                tmpTask = scanner.nextLine().split(splitMark);
+                listOfCompletedTasks.add(new Task(tmpTask));
+                listIdOfCompletedTasks.add(Integer.valueOf(tmpTask[0]));
+            }
+            scanner.close();
+        }
+        catch (Exception e) {
+            System.out.println("failed to load the completed task list");
+        }
     }
 
-    public static void saveTasksLists() throws FileNotFoundException {
+    public void saveTasksLists() throws FileNotFoundException {
         PrintWriter printWriter;
 
         printWriter = new PrintWriter(pathListOfShortTasks);
@@ -132,29 +146,40 @@ public class ListOfTasks {
         printWriter.close();
     }
 
-    public static void markAsCompleted(int ID) {
+    public void markAsCompleted(int ID) {
         if (listIdOfShortTasks.contains(ID)) {
             int index = listIdOfShortTasks.indexOf(ID);
             listOfCompletedTasks.add(listOfShortTasks.get(index));
+            listIdOfCompletedTasks.add(ID);
             listOfShortTasks.remove(index);
+            listIdOfShortTasks.remove(index);
         }
         if (listIdOfLongTasks.contains(ID)) {
             int index = listIdOfLongTasks.indexOf(ID);
             listOfCompletedTasks.add(listOfLongTasks.get(index));
+            listIdOfCompletedTasks.add(ID);
             listOfLongTasks.remove(index);
+            listIdOfLongTasks.remove(index);
         }
-        sortTasksByPriority();
     }
 
-    public static Task getFirstShortTask(){
-        return getListOfShortTasks().get(0);
+    public ArrayList<Task> getFirst4ShortTask(){
+        ArrayList<Task> tmp = new ArrayList<>();
+        for(int i = 0; i < 4; i++ ){
+            try {
+                tmp.add(getListOfShortTasks().get(i));
+            }
+            catch (Exception e){
+            }
+        }
+        return tmp;
     }
 
-    public static Task getFirstLongTask(){
+    public Task getFirstLongTask(){
         return getListOfLongTasks().get(0);
     }
 
-    public static void sortTasksByPriority() {
+    public void sortTasksByPriority() {
 
         ArrayList<Task> tmpShort = new ArrayList<>();
         ArrayList<Task> tmpLong = new ArrayList<>();
@@ -173,5 +198,22 @@ public class ListOfTasks {
         }
         listOfShortTasks = tmpShort;
         listOfLongTasks = tmpLong;
+    }
+
+    public void printTaskToDo(int endedWorkPhases) {
+//        TODO if list is null!
+        listToDo.clear();
+        System.out.print("you should work on ");
+        if (endedWorkPhases % 2 == 0) {
+            System.out.println("that 4 short task:");
+            listToDo = getFirst4ShortTask();
+        }
+        else {
+            System.out.println("that 1 long task:");
+            listToDo.add(getFirstLongTask());
+        }
+        for (Task task : listToDo) {
+            task.printTask();
+        }
     }
 }

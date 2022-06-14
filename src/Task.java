@@ -111,5 +111,10 @@ public class Task {
         this.editedBy = createdBy;
     }
 
-
+    public void printTask() {
+        System.out.println("task no: "+ID
+                +" | name: "+name
+                +" | short task: "+shortTask
+                +" | priority: "+priority);
+    }
 }
