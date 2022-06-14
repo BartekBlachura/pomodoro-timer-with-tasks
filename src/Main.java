@@ -81,24 +81,20 @@ public class Main {
             selectedOption = inputInt();
 
             switch (selectedOption) {
-                case 1 -> {
-                    System.out.println("add new task");
-                }
+                case 1 -> addTask(listOfTasks);
                 case 2 -> {
-                    System.out.println("list of short tasks");
+                    System.out.println("list of short tasks:");
                     listOfTasks.printListOfTasks(listOfTasks.getListOfShortTasks());
                 }
                 case 3 -> {
-                    System.out.println("list of long tasks");
+                    System.out.println("list of long tasks:");
                     listOfTasks.printListOfTasks(listOfTasks.getListOfLongTasks());
                 }
                 case 4 -> {
-                    System.out.println("list of completed tasks");
+                    System.out.println("list of completed tasks:");
                     listOfTasks.printListOfTasks(listOfTasks.getListOfCompletedTasks());
                 }
-                case 5 -> {
-                    System.out.println("mark task as done");
-                }
+                case 5 -> markAsDone(listOfTasks);
                 case 6 -> {
                     listOfTasks.sortTasksByPriority();
                     System.out.println("tasks have been sorted");
@@ -108,6 +104,29 @@ public class Main {
                     System.out.println("input correct number");
                     tasks(listOfTasks);
                 }
+            }
+        }
+    }
+
+    private static void addTask(ListOfTasks listOfTasks){
+        System.out.println("add new task");
+    }
+
+    private static void markAsDone(ListOfTasks listOfTasks){
+        boolean correctInput = false;
+        while (!correctInput) {
+            System.out.print("input task ID: ");
+            try {
+                if(listOfTasks.markAsCompleted(Integer.parseInt(scanner.nextLine()))){
+                    System.out.println("task marked as done");
+                }
+                else {
+                    System.out.println("there is no task with the given ID");
+                }
+                correctInput = true;
+            }
+            catch (Exception e){
+                System.out.println("input correct number");
             }
         }
     }
@@ -126,17 +145,18 @@ public class Main {
         ListOfTasks listOfTasks = new ListOfTasks();
         listOfTasks.loadTasksLists();
 
-        System.out.println("pomodoro timer with task list");
+        System.out.println("--------------------");
+        System.out.println("POMODORO TIMER WITH TASK LIST");
 
         int selectedOption = 99;
         while (selectedOption != 9) {
             System.out.println("--------------------");
             if (pomodoro.isWorkPhase()) {
-                System.out.println("It's time to work!");
+                System.out.println("it's time to work!");
                 listOfTasks.printTaskToDo(pomodoro.getEndedWorkPhases());
             }
             else {
-                System.out.println("It's time to rest!");
+                System.out.println("it's time to rest!");
             }
             System.out.println("--------------------");
             displayMenu();
@@ -164,3 +184,5 @@ public class Main {
         scanner.close();
     }
 }
+
+// TODO log4J ? zapis logów dla javy

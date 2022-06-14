@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,11 +12,11 @@ public class ListOfTasks {
     private ArrayList<Task> listOfLongTasks = new ArrayList<>();
     private ArrayList<Integer> listIdOfLongTasks = new ArrayList<>();
     private ArrayList<Task> listOfCompletedTasks = new ArrayList<>();
-    private ArrayList<Integer> listIdOfCompletedTasks = new ArrayList<>();
-    private String pathListOfShortTasks = "short-tasks.txt";
-    private String pathListOfLongTasks = "long-tasks.txt";
-    private String pathListOfCompletedTasks = "completed-tasks.txt";
-    private String splitMark = "###";
+    private  ArrayList<Integer> listIdOfCompletedTasks = new ArrayList<>();
+    private final String pathListOfShortTasks = "short-tasks.txt";
+    private final String pathListOfLongTasks = "long-tasks.txt";
+    private final String pathListOfCompletedTasks = "completed-tasks.txt";
+    private final String splitMark = "###";
 
 
     public ArrayList<Task> getListOfShortTasks() {
@@ -42,16 +41,20 @@ public class ListOfTasks {
     }
 
     public void printListOfTasks(ArrayList<Task> listOfTasks) {
-//        TODO if list is null!
-        for (Task task : listOfTasks) {
-            System.out.println("task no: "+task.getID()
-                    +" | name: "+task.getName()
-                    +" | short task: "+task.isShortTask()
-                    +" | priority: "+task.getPriority()
-                    +" | creation date: "+task.getCreationDate()
-                    +" | created by: "+task.getCreatedBy()
-                    +" | edit date: "+task.getEditDate()
-                    +" | edited by: "+task.getEditedBy());
+        if(listOfTasks.size() > 0) {
+            for (Task task : listOfTasks) {
+                System.out.println("task no: "+task.getID()
+                        +" | name: "+task.getName()
+                        +" | short task: "+task.isShortTask()
+                        +" | priority: "+task.getPriority()
+                        +" | creation date: "+task.getCreationDate()
+                        +" | created by: "+task.getCreatedBy()
+                        +" | edit date: "+task.getEditDate()
+                        +" | edited by: "+task.getEditedBy());
+            }
+        }
+        else {
+            System.out.println("no data");
         }
     }
 
@@ -146,13 +149,14 @@ public class ListOfTasks {
         printWriter.close();
     }
 
-    public void markAsCompleted(int ID) {
+    public boolean markAsCompleted(int ID) {
         if (listIdOfShortTasks.contains(ID)) {
             int index = listIdOfShortTasks.indexOf(ID);
             listOfCompletedTasks.add(listOfShortTasks.get(index));
             listIdOfCompletedTasks.add(ID);
             listOfShortTasks.remove(index);
             listIdOfShortTasks.remove(index);
+            return true;
         }
         if (listIdOfLongTasks.contains(ID)) {
             int index = listIdOfLongTasks.indexOf(ID);
@@ -160,6 +164,10 @@ public class ListOfTasks {
             listIdOfCompletedTasks.add(ID);
             listOfLongTasks.remove(index);
             listIdOfLongTasks.remove(index);
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -170,6 +178,7 @@ public class ListOfTasks {
                 tmp.add(getListOfShortTasks().get(i));
             }
             catch (Exception e){
+                System.out.println("no data");
             }
         }
         return tmp;
@@ -201,10 +210,9 @@ public class ListOfTasks {
     }
 
     public void printTaskToDo(int endedWorkPhases) {
-//        TODO if list is null!
         listToDo.clear();
         System.out.print("you should work on ");
-        if (endedWorkPhases % 2 == 0) {
+        if (endedWorkPhases % 2 == 0 && listOfShortTasks.size() > 0) {
             System.out.println("that 4 short task:");
             listToDo = getFirst4ShortTask();
         }
@@ -212,8 +220,13 @@ public class ListOfTasks {
             System.out.println("that 1 long task:");
             listToDo.add(getFirstLongTask());
         }
-        for (Task task : listToDo) {
-            task.printTask();
+        if(listToDo.size() > 0) {
+            for (Task task : listToDo) {
+                task.printTask();
+            }
+        }
+        else {
+            System.out.println("no data");
         }
     }
 }
