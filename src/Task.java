@@ -1,66 +1,41 @@
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Task {
-    private int ID;
-    private String name;
-    private boolean shortTask;
-    private int priority;       // 1-2-3
-    private String creationDate;
-    private String createdBy;
+    private final int ID;
+    private final String name;
+    private final boolean shortTask;
+    private final int priority;
+    private final String creationDate;
+    private final String createdBy;
     private String editDate;
     private String editedBy;
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss zzz");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss zzz");
 
     public int getID() {
         return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public boolean isShortTask() {
         return shortTask;
-    }
-
-    public void setShortTask(boolean shortTask) {
-        this.shortTask = shortTask;
     }
 
     public int getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
     public String getCreationDate() {
         return creationDate;
     }
 
-//    public void setCreationDate(Date creationDate) {
-//        this.creationDate = sdf.format(creationDate);
-//    }
-
     public String getCreatedBy() {
         return createdBy;
     }
-
-//    public void setCreatedBy(String createdBy) {
-//        this.createdBy = createdBy;
-//    }
 
     public String getEditDate() {
         return editDate;

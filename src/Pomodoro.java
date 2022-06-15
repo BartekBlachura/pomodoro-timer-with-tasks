@@ -68,24 +68,12 @@ public class Pomodoro {
         this.longBreakTime = seconds;
     }
 
-    public void setTimeLeft(int seconds) {
-        timeLeft = seconds;
-    }
-
     public boolean isWorkPhase() {
         return workPhase;
     }
 
-    public void setWorkPhase(boolean workPhase) {
-        this.workPhase = workPhase;
-    }
-
     public boolean isBreakPhase() {
         return breakPhase;
-    }
-
-    public void setBreakPhase(boolean breakPhase) {
-        this.breakPhase = breakPhase;
     }
 
     public int getEndedWorkPhases() {

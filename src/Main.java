@@ -1,7 +1,9 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
+    private static boolean previousCompleted = true;
 
     private static int inputInt() {
         try {
@@ -220,23 +222,49 @@ public class Main {
         }
     }
 
-    public static void markPreviousCompleted() {
+    public static void markPreviousCompleted(ListOfTasks listOfTasks, Pomodoro pomodoro) {
+        int nonCompleted = listOfTasks.getListToDo().size();
+        ArrayList<Integer> tasksToRemove = new ArrayList<>();
+
         System.out.println("was previous completed?");
-//        TODO oznaczanie poprzednich zadań czy zostały zakończone
+        for (Task task : listOfTasks.getListToDo()) {
+            task.printTask();
+            while (true) {
+                System.out.print("has this task been completed? (Y/N): ");
+                try {
+                    String answer = scanner.nextLine();
+                    if (answer.equals("Y") || answer.equals("y")) {
+                        tasksToRemove.add(task.getID());
+                        break;
+                    }
+                    if (answer.equals("N") || answer.equals("n")) {
+                        break;
+                    }
+                    else {
+                        System.out.println("input correct answer (Y/N)");
+                    }
+                } catch (Exception e) {
+                    System.out.println("input correct answer (Y/N)");
+                }
+            }
+        }
+        for (Integer ID : tasksToRemove) {
+            listOfTasks.markAsCompleted(ID, pomodoro.getUserName());
+            nonCompleted--;
+        }
+        previousCompleted = nonCompleted == 0;
     }
 
     public static void main(String[] args) {
-        boolean previousCompleted = false;
-
         Pomodoro pomodoro = new Pomodoro();
+        ListOfTasks listOfTasks = new ListOfTasks();
+
         try {
             pomodoro.loadSettings();
         }
         catch (Exception e) {
             System.out.println("failed to load settings");
         }
-
-        ListOfTasks listOfTasks = new ListOfTasks();
         listOfTasks.loadTasksLists();
 
         System.out.println("--------------------");
@@ -247,7 +275,7 @@ public class Main {
             System.out.println("--------------------");
 
             if (pomodoro.isBreakPhase()){
-                markPreviousCompleted();
+                markPreviousCompleted(listOfTasks, pomodoro);
                 System.out.println("--------------------");
             }
 
@@ -288,4 +316,4 @@ public class Main {
     }
 }
 
-// TODO log4J ? zapis logów dla javy
+// TODO log4J ? how to save logs?

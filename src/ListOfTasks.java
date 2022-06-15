@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class ListOfTasks {
-
     private ArrayList<Task> listToDo = new ArrayList<>();
     private ArrayList<Task> listOfShortTasks = new ArrayList<>();
     private ArrayList<Integer> listIdOfShortTasks = new ArrayList<>();
@@ -20,6 +19,9 @@ public class ListOfTasks {
     private final String splitMark = "###";
     public int lastID;
 
+    public ArrayList<Task> getListToDo() {
+        return listToDo;
+    }
 
     public ArrayList<Task> getListOfShortTasks() {
         return listOfShortTasks;
@@ -172,6 +174,13 @@ public class ListOfTasks {
             listIdOfCompletedTasks.add(ID);
             listOfShortTasks.remove(index);
             listIdOfShortTasks.remove(index);
+            for (int i = 0; i < listToDo.size(); i++) {
+                if (listToDo.get(i).getID() == ID) {
+                    index = i;
+                    break;
+                }
+            }
+            listToDo.remove(index);
             return true;
         }
         if (listIdOfLongTasks.contains(ID)) {
@@ -182,16 +191,28 @@ public class ListOfTasks {
             listIdOfCompletedTasks.add(ID);
             listOfLongTasks.remove(index);
             listIdOfLongTasks.remove(index);
+            for (int i = 0; i < listToDo.size(); i++) {
+                if (listToDo.get(i).getID() == ID) {
+                    index = i;
+                    break;
+                }
+            }
+            listToDo.remove(index);
             return true;
         }
+
         else {
             return false;
         }
     }
 
-    public ArrayList<Task> getFirst4ShortTask(){
+    public ArrayList<Task> getFirst4ShortTasks() {
         ArrayList<Task> tmp = new ArrayList<>();
-        for(int i = 0; i < 4; i++ ){
+        int endIndex = listOfShortTasks.size();
+        if(endIndex > 4) {
+            endIndex = 4;
+        }
+        for (int i = 0; i < endIndex; i++ ) {
             try {
                 tmp.add(getListOfShortTasks().get(i));
             }
@@ -227,26 +248,30 @@ public class ListOfTasks {
     }
 
     public void printTaskToDo(int endedWorkPhases, boolean previousCompleted) {
-        listToDo.clear();
-        System.out.print("you should work on ");
-//        TODO kontynuacja rozpoczętych zadań
-        if (endedWorkPhases % 2 == 0 && listOfShortTasks.size() > 0) {
-            System.out.println("that short tasks:");
-            listToDo = getFirst4ShortTask();
+        if (previousCompleted) {
+            listToDo.clear();
+            System.out.print("you should work on ");
+            if (endedWorkPhases % 2 == 0 && listOfShortTasks.size() > 0) {
+                listToDo = getFirst4ShortTasks();
+                if (listToDo.size() > 1) {
+                    System.out.println("that short tasks:");
+                }
+                else {
+                    System.out.println("that short task:");
+                }
+            }
+            else {
+                listToDo.add(getFirstLongTask());
+                System.out.println("that long task:");
+            }
         }
         else {
-            System.out.println("that long task:");
-            listToDo.add(getFirstLongTask());
+            System.out.println("you should continue to work on:");
         }
         if(listToDo.size() > 0) {
             for (Task task : listToDo) {
                 task.printTask();
             }
-//            TODO wyswietlanei gdy mniej niż 1 zadanie
-//            no data
-//            no data
-//            no data
-//            task no: 33 | name: pieske i kotek | short task: true | priority: 3
         }
         else {
             System.out.println("no data");
