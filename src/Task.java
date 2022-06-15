@@ -50,17 +50,17 @@ public class Task {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = sdf.format(creationDate);
-    }
+//    public void setCreationDate(Date creationDate) {
+//        this.creationDate = sdf.format(creationDate);
+//    }
 
     public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
+//    public void setCreatedBy(String createdBy) {
+//        this.createdBy = createdBy;
+//    }
 
     public String getEditDate() {
         return editDate;
@@ -89,7 +89,7 @@ public class Task {
         this.editedBy = createdBy;
     }
 
-    public Task(String[] taskTable) throws ParseException {
+    public Task(String[] taskTable) {
         this.ID = Integer.parseInt(taskTable[0]);
         this.name = taskTable[1];
         this.shortTask = Boolean.parseBoolean(taskTable[2]);
@@ -113,7 +113,7 @@ public class Task {
 
     public void printTask() {
         System.out.println("task no: "+ID
-                +" | name: "+name
+                +" | name: "+name.replace("_", " ")
                 +" | short task: "+shortTask
                 +" | priority: "+priority);
     }

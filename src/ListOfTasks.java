@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class ListOfTasks {
@@ -17,6 +18,7 @@ public class ListOfTasks {
     private final String pathListOfLongTasks = "long-tasks.txt";
     private final String pathListOfCompletedTasks = "completed-tasks.txt";
     private final String splitMark = "###";
+    public int lastID;
 
 
     public ArrayList<Task> getListOfShortTasks() {
@@ -44,7 +46,7 @@ public class ListOfTasks {
         if(listOfTasks.size() > 0) {
             for (Task task : listOfTasks) {
                 System.out.println("task no: "+task.getID()
-                        +" | name: "+task.getName()
+                        +" | name: "+task.getName().replace("_", " ")
                         +" | short task: "+task.isShortTask()
                         +" | priority: "+task.getPriority()
                         +" | creation date: "+task.getCreationDate()
@@ -61,6 +63,8 @@ public class ListOfTasks {
     public void loadTasksLists(){
         Scanner scanner;
         String[] tmpTask;
+        int tmpID;
+        int tmpLastID = 0;
 
         try {
             scanner = new Scanner(new File(pathListOfShortTasks));
@@ -68,42 +72,52 @@ public class ListOfTasks {
             while (scanner.hasNextLine()) {
                 tmpTask = scanner.nextLine().split(splitMark);
                 listOfShortTasks.add(new Task(tmpTask));
-                listIdOfShortTasks.add(Integer.valueOf(tmpTask[0]));
+                tmpID = Integer.parseInt(tmpTask[0]);
+                listIdOfShortTasks.add(tmpID);
+                if (tmpID > tmpLastID) {
+                    tmpLastID = tmpID;
+                }
             }
             scanner.close();
         }
         catch (Exception e) {
             System.out.println("failed to load the short task list");
         }
-
-
         try {
             scanner = new Scanner(new File(pathListOfLongTasks));
             listOfLongTasks.clear();
             while (scanner.hasNextLine()){
                 tmpTask = scanner.nextLine().split(splitMark);
                 listOfLongTasks.add(new Task(tmpTask));
-                listIdOfLongTasks.add(Integer.valueOf(tmpTask[0]));
+                tmpID = Integer.parseInt(tmpTask[0]);
+                listIdOfLongTasks.add(tmpID);
+                if (tmpID > tmpLastID) {
+                    tmpLastID = tmpID;
+                }
             }
             scanner.close();
         }
         catch (Exception e) {
             System.out.println("failed to load the long task list");
         }
-
         try {
             scanner = new Scanner(new File(pathListOfCompletedTasks));
             listOfCompletedTasks.clear();
             while (scanner.hasNextLine()){
                 tmpTask = scanner.nextLine().split(splitMark);
                 listOfCompletedTasks.add(new Task(tmpTask));
-                listIdOfCompletedTasks.add(Integer.valueOf(tmpTask[0]));
+                tmpID = Integer.parseInt(tmpTask[0]);
+                listIdOfCompletedTasks.add(tmpID);
+                if (tmpID > tmpLastID) {
+                    tmpLastID = tmpID;
+                }
             }
             scanner.close();
         }
         catch (Exception e) {
             System.out.println("failed to load the completed task list");
         }
+        lastID = tmpLastID;
     }
 
     public void saveTasksLists() throws FileNotFoundException {
@@ -149,9 +163,11 @@ public class ListOfTasks {
         printWriter.close();
     }
 
-    public boolean markAsCompleted(int ID) {
+    public boolean markAsCompleted(int ID, String userName) {
         if (listIdOfShortTasks.contains(ID)) {
             int index = listIdOfShortTasks.indexOf(ID);
+            listOfShortTasks.get(index).setEditDate(new Date());
+            listOfShortTasks.get(index).setEditedBy(userName);
             listOfCompletedTasks.add(listOfShortTasks.get(index));
             listIdOfCompletedTasks.add(ID);
             listOfShortTasks.remove(index);
@@ -160,6 +176,8 @@ public class ListOfTasks {
         }
         if (listIdOfLongTasks.contains(ID)) {
             int index = listIdOfLongTasks.indexOf(ID);
+            listOfLongTasks.get(index).setEditDate(new Date());
+            listOfLongTasks.get(index).setEditedBy(userName);
             listOfCompletedTasks.add(listOfLongTasks.get(index));
             listIdOfCompletedTasks.add(ID);
             listOfLongTasks.remove(index);
@@ -189,7 +207,6 @@ public class ListOfTasks {
     }
 
     public void sortTasksByPriority() {
-
         ArrayList<Task> tmpShort = new ArrayList<>();
         ArrayList<Task> tmpLong = new ArrayList<>();
 
@@ -209,21 +226,27 @@ public class ListOfTasks {
         listOfLongTasks = tmpLong;
     }
 
-    public void printTaskToDo(int endedWorkPhases) {
+    public void printTaskToDo(int endedWorkPhases, boolean previousCompleted) {
         listToDo.clear();
         System.out.print("you should work on ");
+//        TODO kontynuacja rozpoczętych zadań
         if (endedWorkPhases % 2 == 0 && listOfShortTasks.size() > 0) {
-            System.out.println("that 4 short task:");
+            System.out.println("that short tasks:");
             listToDo = getFirst4ShortTask();
         }
         else {
-            System.out.println("that 1 long task:");
+            System.out.println("that long task:");
             listToDo.add(getFirstLongTask());
         }
         if(listToDo.size() > 0) {
             for (Task task : listToDo) {
                 task.printTask();
             }
+//            TODO wyswietlanei gdy mniej niż 1 zadanie
+//            no data
+//            no data
+//            no data
+//            task no: 33 | name: pieske i kotek | short task: true | priority: 3
         }
         else {
             System.out.println("no data");

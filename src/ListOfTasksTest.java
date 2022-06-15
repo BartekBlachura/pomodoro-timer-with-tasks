@@ -23,8 +23,8 @@ class ListOfTasksTest {
     void loadTasksLists() throws FileNotFoundException, ParseException {
         listOfTasks.loadTasksLists();
 
-        listOfTasks.markAsCompleted(2);
-        listOfTasks.markAsCompleted(5);
+        listOfTasks.markAsCompleted(2,"test");
+        listOfTasks.markAsCompleted(5,"test");
 
         System.out.println("short");
         listOfTasks.printListOfTasks(listOfTasks.getListOfShortTasks());
@@ -56,10 +56,10 @@ class ListOfTasksTest {
         listOfTasks.printListOfTasks(listOfTasks.getListOfCompletedTasks());
     }
 
-    @Test
-    void test() throws FileNotFoundException, ParseException {
-        listOfTasks.loadTasksLists();
-        listOfTasks.printTaskToDo(2);
-        listOfTasks.printTaskToDo(3);
-    }
+//    @Test
+//    void test() throws FileNotFoundException, ParseException {
+//        listOfTasks.loadTasksLists();
+//        listOfTasks.printTaskToDo(2,false);
+//        listOfTasks.printTaskToDo(3, false);
+//    }
 }

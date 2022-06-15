@@ -1,7 +1,13 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
 public class Pomodoro {
-    private static int workTime = 25 * 60;         // seconds
-    private static int shortBreakTime = 5 * 60;    // seconds
-    private static int longBreakTime = 15 * 60;    // seconds
+    private String userName = "User";
+    private int workTime = 25 * 60;         // seconds
+    private int shortBreakTime = 5 * 60;    // seconds
+    private int longBreakTime = 15 * 60;    // seconds
     private boolean workPhase = true;
     private boolean breakPhase = false;
     private int endedWorkPhases = 0;
@@ -9,15 +15,23 @@ public class Pomodoro {
 
     public Pomodoro(){}
 
-    public static int getWorkTimeMinutes() {
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public int getWorkTimeMinutes() {
         return workTime / 60;
     }
 
-    public static int getShortBreakTimeMinutes() {
+    public int getShortBreakTimeMinutes() {
         return shortBreakTime / 60;
     }
 
-    public static int getLongBreakTimeMinutes() {
+    public int getLongBreakTimeMinutes() {
         return longBreakTime / 60;
     }
 
@@ -82,7 +96,6 @@ public class Pomodoro {
         this.endedWorkPhases = endedWorkPhases;
     }
 
-
     public boolean pomodoroWork(){
         long startTime = System.currentTimeMillis();
         timeLeft = workTime;
@@ -134,5 +147,23 @@ public class Pomodoro {
             workPhase = pomodoroBreak();
             breakPhase = !workPhase;
         }
+    }
+
+    public void loadSettings() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File("settings.txt"));
+        userName = scanner.nextLine();
+        workTime = Integer.parseInt(scanner.nextLine());
+        shortBreakTime = Integer.parseInt(scanner.nextLine());
+        longBreakTime = Integer.parseInt(scanner.nextLine());
+        scanner.close();
+    }
+
+    public void saveSettings() throws FileNotFoundException {
+        PrintWriter printWriter = new PrintWriter("settings.txt");
+        printWriter.println(userName);
+        printWriter.println(workTime);
+        printWriter.println(shortBreakTime);
+        printWriter.println(longBreakTime);
+        printWriter.close();
     }
 }
