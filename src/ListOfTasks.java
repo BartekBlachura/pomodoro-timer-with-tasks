@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -227,24 +228,44 @@ public class ListOfTasks {
         return getListOfLongTasks().get(0);
     }
 
-    public void sortTasksByPriority() {
-        ArrayList<Task> tmpShort = new ArrayList<>();
-        ArrayList<Task> tmpLong = new ArrayList<>();
+//    public void sortTasksByPriority() {
+//        ArrayList<Task> tmpShort = new ArrayList<>();
+//        ArrayList<Task> tmpLong = new ArrayList<>();
+//
+//        for (int priority = 3; priority > 0; priority--) {
+//            for (Task task: listOfShortTasks) {
+//                if (task.getPriority() == priority) {
+//                    tmpShort.add(task);
+//                }
+//            }
+//            for (Task task: listOfLongTasks) {
+//                if (task.getPriority() == priority) {
+//                    tmpLong.add(task);
+//                }
+//            }
+//        }
+//        listOfShortTasks = tmpShort;
+//        listOfLongTasks = tmpLong;
+//    }
 
-        for (int priority = 3; priority > 0; priority--) {
-            for (Task task: listOfShortTasks) {
-                if (task.getPriority() == priority) {
-                    tmpShort.add(task);
-                }
-            }
-            for (Task task: listOfLongTasks) {
-                if (task.getPriority() == priority) {
-                    tmpLong.add(task);
-                }
-            }
+    public void sortTasksByPriority() {
+        Task[] tmpTasks;
+
+        tmpTasks = new Task[listOfShortTasks.size()];
+        for (int i = 0; i < tmpTasks.length; i++){
+            tmpTasks[i] = listOfShortTasks.get(i);
         }
-        listOfShortTasks = tmpShort;
-        listOfLongTasks = tmpLong;
+        Arrays.sort(tmpTasks);
+        listOfShortTasks.clear();
+        listOfShortTasks.addAll(Arrays.asList(tmpTasks));
+
+        tmpTasks = new Task[listOfLongTasks.size()];
+        for (int i = 0; i < tmpTasks.length; i++){
+            tmpTasks[i] = listOfLongTasks.get(i);
+        }
+        Arrays.sort(tmpTasks);
+        listOfLongTasks.clear();
+        listOfLongTasks.addAll(Arrays.asList(tmpTasks));
     }
 
     public void printTaskToDo(int endedWorkPhases, boolean previousCompleted) {

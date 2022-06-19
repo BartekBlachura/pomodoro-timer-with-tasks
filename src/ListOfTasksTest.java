@@ -14,7 +14,7 @@ class ListOfTasksTest {
     void makeTaskList(int quantity, int msSleep) throws InterruptedException {
         Random random = new Random();
         for (int i = 0; i < quantity; i++){
-            listOfTasks.addTaskToList(new Task(i+1, random.nextBoolean(), random.nextInt(1,4)));
+            listOfTasks.addTaskToList(new Task(i+1,"task #" + i, random.nextBoolean(), random.nextInt(1,4), "test"));
             Thread.sleep(msSleep);
         }
     }
@@ -38,14 +38,26 @@ class ListOfTasksTest {
 
     @Test
     void saveTasksLists() throws FileNotFoundException, InterruptedException {;
-        makeTaskList(30, 1000);
+        makeTaskList(30, 0);
         listOfTasks.saveTasksLists();
     }
 
-    @Test
-    void sortTasksByPriority() throws FileNotFoundException, ParseException {
-        listOfTasks.loadTasksLists();
+//    @Test
+//    void sortTasksByPriority() throws FileNotFoundException, ParseException {
+//        listOfTasks.loadTasksLists();
+//        listOfTasks.sortTasksByPriority();
+//
+//        System.out.println("short");
+//        listOfTasks.printListOfTasks(listOfTasks.getListOfShortTasks());
+//        System.out.println("long");
+//        listOfTasks.printListOfTasks(listOfTasks.getListOfLongTasks());
+//        System.out.println("completed");
+//        listOfTasks.printListOfTasks(listOfTasks.getListOfCompletedTasks());
+//    }
 
+    @Test
+    void sortTasksByPriority2() throws FileNotFoundException, ParseException {
+        listOfTasks.loadTasksLists();
         listOfTasks.sortTasksByPriority();
 
         System.out.println("short");

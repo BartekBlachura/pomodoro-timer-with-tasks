@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Task {
+public class Task implements Comparable<Task>{
     private final int ID;
     private final String name;
     private final boolean shortTask;
@@ -75,21 +75,27 @@ public class Task {
         this.editedBy = taskTable[7];
     }
 
-    public Task(int ID, boolean shortTask, int priority) {
-        this.ID = ID;
-        this.name = "test task no " + ID;
-        this.shortTask = shortTask;
-        this.priority = priority;
-        this.creationDate = sdf.format(new Date());
-        this.createdBy = "Bartek";
-        this.editDate = creationDate;
-        this.editedBy = createdBy;
-    }
-
     public void printTask() {
         System.out.println("task no: "+ID
                 +" | name: "+name.replace("_", " ")
                 +" | short task: "+shortTask
                 +" | priority: "+priority);
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        if (this.priority > o.priority) {
+            return -1;
+        } else if (this.priority == o.priority) {
+            if (this.ID < o.ID) {
+                return -1;
+            }
+            else {
+                return 1;
+            }
+        }
+        else {
+            return 1;
+        }
     }
 }
