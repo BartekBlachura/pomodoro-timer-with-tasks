@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Task implements Comparable<Task>{
+public class Task implements Comparable<Task> {
     private final int ID;
     private final String name;
     private final boolean shortTask;
@@ -87,15 +87,13 @@ public class Task implements Comparable<Task>{
         if (this.priority > o.priority) {
             return -1;
         } else if (this.priority == o.priority) {
-            if (this.ID < o.ID) {
-                return -1;
-            }
-            else {
-                return 1;
-            }
-        }
-        else {
+            return Integer.compare(this.ID, o.ID);
+        } else {
             return 1;
         }
+    }
+
+    public boolean equals(Task o) {
+        return this.ID == o.ID;
     }
 }

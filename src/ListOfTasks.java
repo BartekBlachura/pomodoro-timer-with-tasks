@@ -39,8 +39,7 @@ public class ListOfTasks {
     public void addTaskToList(Task task) {
         if (task.isShortTask()) {
             listOfShortTasks.add(task);
-        }
-        else {
+        } else {
             listOfLongTasks.add(task);
         }
     }
@@ -57,8 +56,7 @@ public class ListOfTasks {
                         +" | edit date: "+task.getEditDate()
                         +" | edited by: "+task.getEditedBy());
             }
-        }
-        else {
+        } else {
             System.out.println("no data");
         }
     }
@@ -203,20 +201,18 @@ public class ListOfTasks {
             }
             listToDo.remove(index);
             return true;
-        }
-
-        else {
+        } else {
             return false;
         }
     }
 
-    public ArrayList<Task> getFirst4ShortTasks() {
+    public ArrayList<Task> getSomeShortTasks(int startIndex, int someShortTasks) {
         ArrayList<Task> tmp = new ArrayList<>();
         int endIndex = listOfShortTasks.size();
-        if(endIndex > 4) {
-            endIndex = 4;
+        if(endIndex > someShortTasks) {
+            endIndex = someShortTasks;
         }
-        for (int i = 0; i < endIndex; i++ ) {
+        for (int i = startIndex; i < endIndex; i++ ) {
             try {
                 tmp.add(getListOfShortTasks().get(i));
             }
@@ -231,26 +227,6 @@ public class ListOfTasks {
     public Task getFirstLongTask(){
         return getListOfLongTasks().get(0);
     }
-
-//    public void sortTasksByPriority() {
-//        ArrayList<Task> tmpShort = new ArrayList<>();
-//        ArrayList<Task> tmpLong = new ArrayList<>();
-//
-//        for (int priority = 3; priority > 0; priority--) {
-//            for (Task task: listOfShortTasks) {
-//                if (task.getPriority() == priority) {
-//                    tmpShort.add(task);
-//                }
-//            }
-//            for (Task task: listOfLongTasks) {
-//                if (task.getPriority() == priority) {
-//                    tmpLong.add(task);
-//                }
-//            }
-//        }
-//        listOfShortTasks = tmpShort;
-//        listOfLongTasks = tmpLong;
-//    }
 
     public void sortTasksByPriority() {
         Task[] tmpTasks;
@@ -280,37 +256,34 @@ public class ListOfTasks {
         }
     }
 
-    public void printTaskToDo(int endedWorkPhases, boolean previousCompleted) {
+    public void printTaskToDo(int endedWorkPhases, boolean previousCompleted, int tasksToAdd) {
+        int someShortTasks = 4;
         if (previousCompleted) {
             listToDo.clear();
+
             System.out.print("you should work on ");
             if (endedWorkPhases % 2 == 0 && listOfShortTasks.size() > 0) {
-                listToDo = getFirst4ShortTasks();
+                listToDo = getSomeShortTasks(0,someShortTasks);
                 if (listToDo.size() > 1) {
                     System.out.println("that short tasks:");
-                }
-                else {
+                } else {
                     System.out.println("that short task:");
                 }
-            }
-            else {
+            } else {
                 listToDo.add(getFirstLongTask());
                 System.out.println("that long task:");
             }
-        }
-        else {
+        } else {
             System.out.println("you should continue to work on:");
-            if (listToDo.get(0).isShortTask()) {
-//                TODO dobieranie kolejnych krótki zadań
-
+            if (listToDo.get(0).isShortTask() && listToDo.size() < someShortTasks && tasksToAdd > 0) {
+                listToDo.addAll(getSomeShortTasks(listToDo.size(), tasksToAdd + listToDo.size()));
             }
         }
         if(listToDo.size() > 0) {
             for (Task task : listToDo) {
                 task.printTask();
             }
-        }
-        else {
+        } else {
             System.out.println("no data");
         }
     }

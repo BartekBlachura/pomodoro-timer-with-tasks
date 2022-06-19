@@ -4,11 +4,13 @@ import java.util.Scanner;
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static boolean previousCompleted = true;
+    private static int tasksToAdd = 0;
 
     private static int inputInt() {
         try {
             return Integer.parseInt(scanner.nextLine());
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return 99;
         }
     }
@@ -74,12 +76,12 @@ public class Main {
                 if (userName.matches("\\w{1,20}")) {
                     pomodoro.setUserName(userName);
                     break;
-                }
-                else {
+                } else {
                     System.out.println("input new username (1-10 characters - letters, numbers, space)");
                 }
             } catch (Exception e) {
                 System.out.println("input new username (1-10 characters - letters, numbers, space)");
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -90,6 +92,7 @@ public class Main {
             System.out.println("settings have been saved");
         } catch (Exception e) {
             System.out.println("failed to save settings");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -150,12 +153,12 @@ public class Main {
                 name = scanner.nextLine().replace(" ", "_");
                 if (name.matches("\\w{1,20}")) {
                     break;
-                }
-                else {
+                } else {
                     System.out.println("input correct name (1-20 characters - letters, numbers, space)");
                 }
             } catch (Exception e) {
                 System.out.println("input correct name (1-20 characters - letters, numbers, space)");
+                System.out.println(e.getMessage());
             }
         }
         while (true) {
@@ -169,12 +172,12 @@ public class Main {
                 if (answer.equals("N") || answer.equals("n")) {
                     shortTask = false;
                     break;
-                }
-                else {
+                } else {
                     System.out.println("input correct answer (Y/N)");
                 }
             } catch (Exception e) {
                 System.out.println("input correct answer (Y/N)");
+                System.out.println(e.getMessage());
             }
         }
         while (true) {
@@ -183,12 +186,12 @@ public class Main {
                 priority = Integer.parseInt(scanner.nextLine());
                 if (1 <= priority && priority <= 3 ) {
                     break;
-                }
-                else {
+                } else {
                     System.out.println("input correct priority (1-3)");
                 }
             } catch (Exception e) {
                 System.out.println("input correct priority (1-3)");
+                System.out.println(e.getMessage());
             }
         }
         listOfTasks.addTaskToList(new Task(ID, name, shortTask, priority, userName));
@@ -201,14 +204,14 @@ public class Main {
             try {
                 if(listOfTasks.markAsCompleted(Integer.parseInt(scanner.nextLine()),userName)){
                     System.out.println("task marked as done");
-                }
-                else {
+                } else {
                     System.out.println("there is no task with the given ID");
                 }
                 break;
             }
             catch (Exception e){
                 System.out.println("input correct number");
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -219,6 +222,7 @@ public class Main {
             System.out.println("tasks have been saved");
         } catch (Exception e) {
             System.out.println("failed to save the tasks lists");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -239,12 +243,12 @@ public class Main {
                     }
                     if (answer.equals("N") || answer.equals("n")) {
                         break;
-                    }
-                    else {
+                    } else {
                         System.out.println("input correct answer (Y/N)");
                     }
                 } catch (Exception e) {
                     System.out.println("input correct answer (Y/N)");
+                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -253,6 +257,24 @@ public class Main {
             nonCompleted--;
         }
         previousCompleted = nonCompleted == 0;
+
+        if (!previousCompleted && listOfTasks.getListToDo().size() < 4) {
+            while (true) {
+                System.out.print("how many short tasks do you want to add to the list (>=0)? ");
+                 try {
+                     tasksToAdd = Integer.parseInt(scanner.nextLine());
+                     if (tasksToAdd >= 0) {
+                         break;
+                     } else {
+                         System.out.println("input correct amount (>=0)");
+                     }
+                 }
+                 catch (Exception e) {
+                     System.out.println("input correct amount (>=0)");
+                     System.out.println(e.getMessage());
+                 }
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -264,6 +286,7 @@ public class Main {
         }
         catch (Exception e) {
             System.out.println("failed to load settings");
+            System.out.println(e.getMessage());
         }
         listOfTasks.loadTasksLists();
 
@@ -281,9 +304,8 @@ public class Main {
 
             if (pomodoro.isWorkPhase()) {
                 System.out.println("it's time to work!");
-                listOfTasks.printTaskToDo(pomodoro.getEndedWorkPhases(), previousCompleted);
-            }
-            else {
+                listOfTasks.printTaskToDo(pomodoro.getEndedWorkPhases(), previousCompleted, tasksToAdd);
+            } else {
                 System.out.println("it's time to rest!");
             }
             System.out.println("--------------------");
