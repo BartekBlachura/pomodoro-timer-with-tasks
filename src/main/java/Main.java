@@ -1,7 +1,12 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+    private static final Logger logger = LogManager.getLogger(Main.class);
+
     private static final Scanner scanner = new Scanner(System.in);
     private static boolean previousCompleted = true;
     private static int tasksToAdd = 0;
@@ -10,7 +15,7 @@ public class Main {
         try {
             return Integer.parseInt(scanner.nextLine());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.toString());
             return 99;
         }
     }
@@ -81,7 +86,7 @@ public class Main {
                 }
             } catch (Exception e) {
                 System.out.println("input new username (1-10 characters - letters, numbers, space)");
-                System.out.println(e.getMessage());
+                logger.warn(e.toString());
             }
         }
     }
@@ -92,7 +97,7 @@ public class Main {
             System.out.println("settings have been saved");
         } catch (Exception e) {
             System.out.println("failed to save settings");
-            System.out.println(e.getMessage());
+            logger.error(e.toString());
         }
     }
 
@@ -158,7 +163,7 @@ public class Main {
                 }
             } catch (Exception e) {
                 System.out.println("input correct name (1-20 characters - letters, numbers, space)");
-                System.out.println(e.getMessage());
+                logger.warn(e.toString());
             }
         }
         while (true) {
@@ -177,7 +182,7 @@ public class Main {
                 }
             } catch (Exception e) {
                 System.out.println("input correct answer (Y/N)");
-                System.out.println(e.getMessage());
+                logger.warn(e.toString());
             }
         }
         while (true) {
@@ -191,7 +196,7 @@ public class Main {
                 }
             } catch (Exception e) {
                 System.out.println("input correct priority (1-3)");
-                System.out.println(e.getMessage());
+                logger.warn(e.toString());
             }
         }
         listOfTasks.addTaskToList(new Task(ID, name, shortTask, priority, userName));
@@ -211,7 +216,7 @@ public class Main {
             }
             catch (Exception e){
                 System.out.println("input correct number");
-                System.out.println(e.getMessage());
+                logger.warn(e.toString());
             }
         }
     }
@@ -222,7 +227,7 @@ public class Main {
             System.out.println("tasks have been saved");
         } catch (Exception e) {
             System.out.println("failed to save the tasks lists");
-            System.out.println(e.getMessage());
+            logger.error(e.toString());
         }
     }
 
@@ -248,7 +253,7 @@ public class Main {
                     }
                 } catch (Exception e) {
                     System.out.println("input correct answer (Y/N)");
-                    System.out.println(e.getMessage());
+                    logger.warn(e.toString());
                 }
             }
         }
@@ -271,13 +276,14 @@ public class Main {
                  }
                  catch (Exception e) {
                      System.out.println("input correct amount (>=0)");
-                     System.out.println(e.getMessage());
+                     logger.warn(e.toString());
                  }
             }
         }
     }
 
     public static void main(String[] args) {
+        logger.info("entering application");
         Pomodoro pomodoro = new Pomodoro();
         ListOfTasks listOfTasks = new ListOfTasks();
 
@@ -286,7 +292,7 @@ public class Main {
         }
         catch (Exception e) {
             System.out.println("failed to load settings");
-            System.out.println(e.getMessage());
+            logger.warn(e.toString());
         }
         listOfTasks.loadTasksLists();
 
@@ -335,7 +341,8 @@ public class Main {
         saveSettings(pomodoro);
         saveTask(listOfTasks);
         scanner.close();
+        logger.info("exiting application");
     }
 }
 
-// TODO log4J ? how to save logs?
+// TODO dodać logowanie sledzenia dzialania programu

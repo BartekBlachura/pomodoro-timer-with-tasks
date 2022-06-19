@@ -1,3 +1,6 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -7,6 +10,8 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class ListOfTasks {
+    private static final Logger logger = LogManager.getLogger(ListOfTasks.class);
+
     private ArrayList<Task> listToDo = new ArrayList<>();
     private ArrayList<Task> listOfShortTasks = new ArrayList<>();
     private ArrayList<Integer> listIdOfShortTasks = new ArrayList<>();
@@ -83,7 +88,8 @@ public class ListOfTasks {
         }
         catch (Exception e) {
             System.out.println("failed to load the short task list");
-            System.out.println(e.getMessage());
+            logger.warn(e.toString());
+
         }
         try {
             scanner = new Scanner(new File(pathListOfLongTasks));
@@ -101,7 +107,7 @@ public class ListOfTasks {
         }
         catch (Exception e) {
             System.out.println("failed to load the long task list");
-            System.out.println(e.getMessage());
+            logger.warn(e.toString());
         }
         try {
             scanner = new Scanner(new File(pathListOfCompletedTasks));
@@ -119,7 +125,7 @@ public class ListOfTasks {
         }
         catch (Exception e) {
             System.out.println("failed to load the completed task list");
-            System.out.println(e.getMessage());
+            logger.warn(e.toString());
         }
         lastID = tmpLastID;
     }
@@ -213,13 +219,7 @@ public class ListOfTasks {
             endIndex = someShortTasks;
         }
         for (int i = startIndex; i < endIndex; i++ ) {
-            try {
-                tmp.add(getListOfShortTasks().get(i));
-            }
-            catch (Exception e){
-                System.out.println("no data");
-                System.out.println(e.getMessage());
-            }
+            tmp.add(getListOfShortTasks().get(i));
         }
         return tmp;
     }
