@@ -1,12 +1,8 @@
 import org.junit.jupiter.api.Test;
 
-import java.beans.Transient;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ListOfTasksTest {
     ListOfTasks listOfTasks = new ListOfTasks();
@@ -14,7 +10,8 @@ class ListOfTasksTest {
     void makeTaskList(int quantity, int msSleep) throws InterruptedException {
         Random random = new Random();
         for (int i = 0; i < quantity; i++){
-            listOfTasks.addTaskToList(new Task(i+1,"task #" + i, random.nextBoolean(), random.nextInt(1,4), "test"));
+            listOfTasks.addTaskToList(new Task(i+1,"task #" + i + 1,
+                    random.nextBoolean(), random.nextInt(1,4), "test"));
             Thread.sleep(msSleep);
         }
     }
