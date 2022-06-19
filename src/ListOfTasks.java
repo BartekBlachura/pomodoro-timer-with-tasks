@@ -85,6 +85,7 @@ public class ListOfTasks {
         }
         catch (Exception e) {
             System.out.println("failed to load the short task list");
+            System.out.println(e.getMessage());
         }
         try {
             scanner = new Scanner(new File(pathListOfLongTasks));
@@ -102,6 +103,7 @@ public class ListOfTasks {
         }
         catch (Exception e) {
             System.out.println("failed to load the long task list");
+            System.out.println(e.getMessage());
         }
         try {
             scanner = new Scanner(new File(pathListOfCompletedTasks));
@@ -119,6 +121,7 @@ public class ListOfTasks {
         }
         catch (Exception e) {
             System.out.println("failed to load the completed task list");
+            System.out.println(e.getMessage());
         }
         lastID = tmpLastID;
     }
@@ -219,6 +222,7 @@ public class ListOfTasks {
             }
             catch (Exception e){
                 System.out.println("no data");
+                System.out.println(e.getMessage());
             }
         }
         return tmp;
@@ -258,6 +262,10 @@ public class ListOfTasks {
         Arrays.sort(tmpTasks);
         listOfShortTasks.clear();
         listOfShortTasks.addAll(Arrays.asList(tmpTasks));
+        listIdOfShortTasks.clear();
+        for (Task t : listOfShortTasks) {
+            listIdOfShortTasks.add(t.getID());
+        }
 
         tmpTasks = new Task[listOfLongTasks.size()];
         for (int i = 0; i < tmpTasks.length; i++){
@@ -266,6 +274,10 @@ public class ListOfTasks {
         Arrays.sort(tmpTasks);
         listOfLongTasks.clear();
         listOfLongTasks.addAll(Arrays.asList(tmpTasks));
+        listIdOfLongTasks.clear();
+        for (Task t : listOfLongTasks) {
+            listIdOfLongTasks.add(t.getID());
+        }
     }
 
     public void printTaskToDo(int endedWorkPhases, boolean previousCompleted) {
@@ -288,6 +300,10 @@ public class ListOfTasks {
         }
         else {
             System.out.println("you should continue to work on:");
+            if (listToDo.get(0).isShortTask()) {
+//                TODO dobieranie kolejnych krótki zadań
+
+            }
         }
         if(listToDo.size() > 0) {
             for (Task task : listToDo) {
