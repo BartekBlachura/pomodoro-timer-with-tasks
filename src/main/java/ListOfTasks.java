@@ -49,23 +49,6 @@ public class ListOfTasks {
         }
     }
 
-    public void printListOfTasks(ArrayList<Task> listOfTasks) {
-        if(listOfTasks.size() > 0) {
-            for (Task task : listOfTasks) {
-                System.out.println("task no: "+task.getID()
-                        +" | name: "+task.getName().replace("_", " ")
-                        +" | short task: "+task.isShortTask()
-                        +" | priority: "+task.getPriority()
-                        +" | creation date: "+task.getCreationDate()
-                        +" | created by: "+task.getCreatedBy()
-                        +" | edit date: "+task.getEditDate()
-                        +" | edited by: "+task.getEditedBy());
-            }
-        } else {
-            System.out.println("no data");
-        }
-    }
-
     public void loadTasksLists(){
         Scanner scanner;
         String[] tmpTask;
@@ -87,7 +70,6 @@ public class ListOfTasks {
             scanner.close();
         }
         catch (Exception e) {
-            System.out.println("failed to load the short task list");
             logger.warn(e.toString());
 
         }
@@ -106,7 +88,6 @@ public class ListOfTasks {
             scanner.close();
         }
         catch (Exception e) {
-            System.out.println("failed to load the long task list");
             logger.warn(e.toString());
         }
         try {
@@ -123,8 +104,7 @@ public class ListOfTasks {
             }
             scanner.close();
         }
-        catch (Exception e) {
-            System.out.println("failed to load the completed task list");
+        catch (Exception e) {;
             logger.warn(e.toString());
         }
         lastID = tmpLastID;
@@ -256,6 +236,23 @@ public class ListOfTasks {
         }
     }
 
+    public void printListOfTasks(ArrayList<Task> listOfTasks) {
+        if(listOfTasks.size() > 0) {
+            for (Task task : listOfTasks) {
+                System.out.println("task no: "+task.getID()
+                        +" | name: "+task.getName().replace("_", " ")
+                        +" | short task: "+task.isShortTask()
+                        +" | priority: "+task.getPriority()
+                        +" | creation date: "+task.getCreationDate()
+                        +" | created by: "+task.getCreatedBy()
+                        +" | edit date: "+task.getEditDate()
+                        +" | edited by: "+task.getEditedBy());
+            }
+        } else {
+            System.out.println("no data");
+        }
+    }
+
     public void printTaskToDo(int endedWorkPhases, boolean previousCompleted, int tasksToAdd) {
         int someShortTasks = 4;
         if (previousCompleted) {
@@ -281,7 +278,7 @@ public class ListOfTasks {
         }
         if(listToDo.size() > 0) {
             for (Task task : listToDo) {
-                task.printTask();
+                System.out.println(task.toString());
             }
         } else {
             System.out.println("no data");

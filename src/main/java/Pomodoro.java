@@ -1,6 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Scanner;
 
 public class Pomodoro {
@@ -137,21 +135,19 @@ public class Pomodoro {
         }
     }
 
-    public void loadSettings() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("settings.txt"));
-        userName = scanner.nextLine();
-        workTime = Integer.parseInt(scanner.nextLine());
-        shortBreakTime = Integer.parseInt(scanner.nextLine());
-        longBreakTime = Integer.parseInt(scanner.nextLine());
-        scanner.close();
+    public void loadSettings() throws IOException {
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream("settings.dat"));
+        userName = dataInputStream.readUTF();
+        workTime = dataInputStream.readInt();
+        shortBreakTime = dataInputStream.readInt();
+        longBreakTime = dataInputStream.readInt();
     }
 
-    public void saveSettings() throws FileNotFoundException {
-        PrintWriter printWriter = new PrintWriter("settings.txt");
-        printWriter.println(userName);
-        printWriter.println(workTime);
-        printWriter.println(shortBreakTime);
-        printWriter.println(longBreakTime);
-        printWriter.close();
+    public void saveSettings() throws IOException {
+        DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream("settings.dat"));
+        dataOutputStream.writeUTF(userName);
+        dataOutputStream.writeInt(workTime);
+        dataOutputStream.writeInt(shortBreakTime);
+        dataOutputStream.writeInt(longBreakTime);
     }
 }

@@ -1,8 +1,12 @@
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.Duration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 
 class PomodoroTest {
@@ -31,6 +35,22 @@ class PomodoroTest {
         pomodoro.setLongBreakTimeSeconds(seconds);
         pomodoro.setEndedWorkPhases(seconds);
         assertTimeout(Duration.ofMillis(1010L * seconds), () -> pomodoro.pomodoroBreak());
+    }
+
+    @Test
+    void settings() throws IOException {
+        pomodoro.setUserName("Test");
+        pomodoro.setWorkTimeMinutes(27);
+        pomodoro.setShortBreakTimeMinutes(7);
+        pomodoro.setLongBreakTimeMinutes(17);
+        pomodoro.saveSettings();
+
+        Pomodoro pomodoroTest = new Pomodoro();
+        pomodoroTest.loadSettings();
+        assertEquals("Test", pomodoroTest.getUserName());
+        assertEquals(27, pomodoroTest.getWorkTimeMinutes());
+        assertEquals(7, pomodoroTest.getShortBreakTimeMinutes());
+        assertEquals(17, pomodoroTest.getLongBreakTimeMinutes());
     }
 
 //    @ParameterizedTest

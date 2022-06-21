@@ -237,7 +237,7 @@ public class Main {
 
         System.out.println("was previous completed?");
         for (Task task : listOfTasks.getListToDo()) {
-            task.printTask();
+            System.out.println(task.toString());
             while (true) {
                 System.out.print("has this task been completed? (Y/N): ");
                 try {
@@ -327,9 +327,9 @@ public class Main {
                 case 1 -> tasks(listOfTasks, pomodoro.getUserName());
                 case 2 -> settings(pomodoro);
                 case 8 -> {
-                    pomodoro.setWorkTimeSeconds(5);
-                    pomodoro.setShortBreakTimeSeconds(3);
-                    pomodoro.setLongBreakTimeSeconds(4);
+                    pomodoro.setWorkTimeSeconds(1);
+                    pomodoro.setShortBreakTimeSeconds(1);
+                    pomodoro.setLongBreakTimeSeconds(1);
                 }
                 case 9 -> {
                     System.out.println("thanks for use");
@@ -346,3 +346,5 @@ public class Main {
 }
 
 // TODO dodać logowanie sledzenia dzialania programu
+// TODO automatyczne sortowanie listy zadań
+// TODO readme

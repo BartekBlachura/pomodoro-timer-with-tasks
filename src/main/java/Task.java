@@ -75,8 +75,9 @@ public class Task implements Comparable<Task> {
         this.editedBy = taskTable[7];
     }
 
-    public void printTask() {
-        System.out.println("task no: "+ID
+    @Override
+    public String toString() {
+        return ("task no: "+ID
                 +" | name: "+name.replace("_", " ")
                 +" | short task: "+shortTask
                 +" | priority: "+priority);
