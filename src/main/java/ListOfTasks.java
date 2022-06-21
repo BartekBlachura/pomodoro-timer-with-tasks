@@ -1,13 +1,10 @@
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Scanner;
 
 public class ListOfTasks {
     private static final Logger logger = LogManager.getLogger(ListOfTasks.class);
@@ -19,11 +16,7 @@ public class ListOfTasks {
     private ArrayList<Integer> listIdOfLongTasks = new ArrayList<>();
     private ArrayList<Task> listOfCompletedTasks = new ArrayList<>();
     private  ArrayList<Integer> listIdOfCompletedTasks = new ArrayList<>();
-    private final String pathListOfShortTasks = "short-tasks.txt";
-    private final String pathListOfLongTasks = "long-tasks.txt";
-    private final String pathListOfCompletedTasks = "completed-tasks.txt";
-    private final String splitMark = "###";
-    public int lastID;
+    public int lastID = 0;
 
     public ArrayList<Task> getListToDo() {
         return listToDo;
@@ -47,110 +40,50 @@ public class ListOfTasks {
         } else {
             listOfLongTasks.add(task);
         }
+        logger.info("task has been added, task ID: " + task.getID());
+        sortTasksByPriority();
     }
 
-    public void loadTasksLists(){
-        Scanner scanner;
-        String[] tmpTask;
+    public void loadTasksLists() throws IOException, ClassNotFoundException {
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("tasks.dat"));
+        listOfShortTasks = (ArrayList<Task>) objectInputStream.readObject();
+        listOfLongTasks = (ArrayList<Task>) objectInputStream.readObject();
+        listOfCompletedTasks = (ArrayList<Task>) objectInputStream.readObject();
+
         int tmpID;
-        int tmpLastID = 0;
-
-        try {
-            scanner = new Scanner(new File(pathListOfShortTasks));
-            listOfShortTasks.clear();
-            while (scanner.hasNextLine()) {
-                tmpTask = scanner.nextLine().split(splitMark);
-                listOfShortTasks.add(new Task(tmpTask));
-                tmpID = Integer.parseInt(tmpTask[0]);
-                listIdOfShortTasks.add(tmpID);
-                if (tmpID > tmpLastID) {
-                    tmpLastID = tmpID;
-                }
+        listIdOfShortTasks.clear();
+        for (Task task : listOfShortTasks) {
+            listIdOfShortTasks.add(task.getID());
+            tmpID = task.getID();
+            if (tmpID > lastID) {
+                lastID = tmpID;
             }
-            scanner.close();
         }
-        catch (Exception e) {
-            logger.warn(e.toString());
-
-        }
-        try {
-            scanner = new Scanner(new File(pathListOfLongTasks));
-            listOfLongTasks.clear();
-            while (scanner.hasNextLine()){
-                tmpTask = scanner.nextLine().split(splitMark);
-                listOfLongTasks.add(new Task(tmpTask));
-                tmpID = Integer.parseInt(tmpTask[0]);
-                listIdOfLongTasks.add(tmpID);
-                if (tmpID > tmpLastID) {
-                    tmpLastID = tmpID;
-                }
+        listIdOfLongTasks.clear();
+        for (Task task : listOfLongTasks) {
+            listIdOfLongTasks.add(task.getID());
+            tmpID = task.getID();
+            if (tmpID > lastID) {
+                lastID = tmpID;
             }
-            scanner.close();
         }
-        catch (Exception e) {
-            logger.warn(e.toString());
-        }
-        try {
-            scanner = new Scanner(new File(pathListOfCompletedTasks));
-            listOfCompletedTasks.clear();
-            while (scanner.hasNextLine()){
-                tmpTask = scanner.nextLine().split(splitMark);
-                listOfCompletedTasks.add(new Task(tmpTask));
-                tmpID = Integer.parseInt(tmpTask[0]);
-                listIdOfCompletedTasks.add(tmpID);
-                if (tmpID > tmpLastID) {
-                    tmpLastID = tmpID;
-                }
+        listIdOfCompletedTasks.clear();
+        for (Task task : listOfCompletedTasks) {
+            listIdOfCompletedTasks.add(task.getID());
+            tmpID = task.getID();
+            if (tmpID > lastID) {
+                lastID = tmpID;
             }
-            scanner.close();
         }
-        catch (Exception e) {;
-            logger.warn(e.toString());
-        }
-        lastID = tmpLastID;
     }
 
-    public void saveTasksLists() throws FileNotFoundException {
-        PrintWriter printWriter;
-
-        printWriter = new PrintWriter(pathListOfShortTasks);
-        for (Task task : listOfShortTasks) {
-            printWriter.println(task.getID()+splitMark
-                    +task.getName()+splitMark
-                    +task.isShortTask()+splitMark
-                    +task.getPriority()+splitMark
-                    +task.getCreationDate()+splitMark
-                    +task.getCreatedBy()+splitMark
-                    +task.getEditDate()+splitMark
-                    +task.getEditedBy());
-        }
-        printWriter.close();
-
-        printWriter = new PrintWriter(pathListOfLongTasks);
-        for (Task task : listOfLongTasks) {
-            printWriter.println(task.getID()+splitMark
-                    +task.getName()+splitMark
-                    +task.isShortTask()+splitMark
-                    +task.getPriority()+splitMark
-                    +task.getCreationDate()+splitMark
-                    +task.getCreatedBy()+splitMark
-                    +task.getEditDate()+splitMark
-                    +task.getEditedBy());
-        }
-        printWriter.close();
-
-        printWriter = new PrintWriter(pathListOfCompletedTasks);
-        for (Task task : listOfCompletedTasks) {
-            printWriter.println(task.getID()+splitMark
-                    +task.getName()+splitMark
-                    +task.isShortTask()+splitMark
-                    +task.getPriority()+splitMark
-                    +task.getCreationDate()+splitMark
-                    +task.getCreatedBy()+splitMark
-                    +task.getEditDate()+splitMark
-                    +task.getEditedBy());
-        }
-        printWriter.close();
+    public void saveTasksLists() throws IOException {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("tasks.dat"));
+        objectOutputStream.writeObject(listOfShortTasks);
+        objectOutputStream.writeObject(listOfLongTasks);
+        objectOutputStream.writeObject(listOfCompletedTasks);
+        objectOutputStream.close();
+        logger.info("tasks have been saved");
     }
 
     public boolean markAsCompleted(int ID, String userName) {
@@ -162,16 +95,17 @@ public class ListOfTasks {
             listIdOfCompletedTasks.add(ID);
             listOfShortTasks.remove(index);
             listIdOfShortTasks.remove(index);
-            for (int i = 0; i < listToDo.size(); i++) {
-                if (listToDo.get(i).getID() == ID) {
-                    index = i;
+
+            for (Task task : listToDo) {
+                if (task.getID() == ID) {
+                    listToDo.remove(task);
                     break;
                 }
             }
-            listToDo.remove(index);
+            logger.info("task marked as done, task ID: " + ID);
             return true;
         }
-        if (listIdOfLongTasks.contains(ID)) {
+        else if (listIdOfLongTasks.contains(ID)) {
             int index = listIdOfLongTasks.indexOf(ID);
             listOfLongTasks.get(index).setEditDate(new Date());
             listOfLongTasks.get(index).setEditedBy(userName);
@@ -179,13 +113,14 @@ public class ListOfTasks {
             listIdOfCompletedTasks.add(ID);
             listOfLongTasks.remove(index);
             listIdOfLongTasks.remove(index);
-            for (int i = 0; i < listToDo.size(); i++) {
-                if (listToDo.get(i).getID() == ID) {
-                    index = i;
+
+            for (Task task : listToDo) {
+                if (task.getID() == ID) {
+                    listToDo.remove(task);
                     break;
                 }
             }
-            listToDo.remove(index);
+            logger.info("task marked as done, task ID: " + ID);
             return true;
         } else {
             return false;
@@ -205,7 +140,10 @@ public class ListOfTasks {
     }
 
     public Task getFirstLongTask(){
-        return getListOfLongTasks().get(0);
+        if (getListOfLongTasks().size() > 0) {
+            return getListOfLongTasks().get(0);
+        }
+        return null;
     }
 
     public void sortTasksByPriority() {
@@ -234,6 +172,7 @@ public class ListOfTasks {
         for (Task t : listOfLongTasks) {
             listIdOfLongTasks.add(t.getID());
         }
+        logger.info("tasks was sorted");
     }
 
     public void printListOfTasks(ArrayList<Task> listOfTasks) {
@@ -257,8 +196,7 @@ public class ListOfTasks {
         int someShortTasks = 4;
         if (previousCompleted) {
             listToDo.clear();
-
-            System.out.print("you should work on ");
+            System.out.print("you should work on: ");
             if (endedWorkPhases % 2 == 0 && listOfShortTasks.size() > 0) {
                 listToDo = getSomeShortTasks(0,someShortTasks);
                 if (listToDo.size() > 1) {
@@ -267,12 +205,14 @@ public class ListOfTasks {
                     System.out.println("that short task:");
                 }
             } else {
-                listToDo.add(getFirstLongTask());
-                System.out.println("that long task:");
+                if (getFirstLongTask() != null) {
+                    listToDo.add(getFirstLongTask());
+                    System.out.println("that long task:");
+                }
             }
         } else {
-            System.out.println("you should continue to work on:");
             if (listToDo.get(0).isShortTask() && listToDo.size() < someShortTasks && tasksToAdd > 0) {
+                System.out.println("you should work on:");
                 listToDo.addAll(getSomeShortTasks(listToDo.size(), tasksToAdd + listToDo.size()));
             }
         }

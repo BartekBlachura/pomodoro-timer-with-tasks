@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Random;
 
@@ -10,14 +11,14 @@ class ListOfTasksTest {
     void makeTaskList(int quantity, int msSleep) throws InterruptedException {
         Random random = new Random();
         for (int i = 0; i < quantity; i++){
-            listOfTasks.addTaskToList(new Task(i+1,"task #" + i + 1,
+            listOfTasks.addTaskToList(new Task(i+1,"task #" + (i + 1),
                     random.nextBoolean(), random.nextInt(1,4), "test"));
             Thread.sleep(msSleep);
         }
     }
 
     @Test
-    void loadTasksLists() throws FileNotFoundException, ParseException {
+    void loadTasksLists() throws IOException, ParseException, ClassNotFoundException {
         listOfTasks.loadTasksLists();
 
         listOfTasks.markAsCompleted(2,"test");
@@ -34,7 +35,7 @@ class ListOfTasksTest {
     }
 
     @Test
-    void saveTasksLists() throws FileNotFoundException, InterruptedException {;
+    void saveTasksLists() throws IOException, InterruptedException {;
         makeTaskList(30, 0);
         listOfTasks.saveTasksLists();
     }
@@ -53,7 +54,7 @@ class ListOfTasksTest {
 //    }
 
     @Test
-    void sortTasksByPriority2() throws FileNotFoundException, ParseException {
+    void sortTasksByPriority2() throws IOException, ParseException, ClassNotFoundException {
         listOfTasks.loadTasksLists();
         listOfTasks.sortTasksByPriority();
 

@@ -1,6 +1,7 @@
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,7 +17,7 @@ public class Main {
             return Integer.parseInt(scanner.nextLine());
         } catch (Exception e) {
             logger.warn(e.toString());
-            return 99;
+            return -1;
         }
     }
 
@@ -53,14 +54,17 @@ public class Main {
                 case 1 -> {
                     System.out.print("input new work time: ");
                     pomodoro.setWorkTimeMinutes(inputInt());
+                    logger.info("work time was changed to: " +pomodoro.getWorkTimeMinutes());
                 }
                 case 2 -> {
                     System.out.print("input new short break time: ");
                     pomodoro.setShortBreakTimeMinutes(inputInt());
+                    logger.info("short break time was changed to: " +pomodoro.getShortBreakTimeMinutes());
                 }
                 case 3 -> {
                     System.out.print("input new long break time: ");
                     pomodoro.setLongBreakTimeMinutes(inputInt());
+                    logger.info("long break time was changed to: " +pomodoro.getLongBreakTimeMinutes());
                 }
                 case 4 -> setUserName(pomodoro);
                 case 9 -> {
@@ -80,6 +84,7 @@ public class Main {
                 userName = scanner.nextLine().replace(" ", "_");
                 if (userName.matches("\\w{1,20}")) {
                     pomodoro.setUserName(userName);
+                    logger.info("username was changed to: " +pomodoro.getUserName());
                     break;
                 } else {
                     System.out.println("input new username (1-10 characters - letters, numbers, space)");
@@ -95,6 +100,7 @@ public class Main {
         try {
             pomodoro.saveSettings();
             System.out.println("settings have been saved");
+            logger.info("settings have been saved");
         } catch (Exception e) {
             System.out.println("failed to save settings");
             logger.error(e.toString());
@@ -114,7 +120,6 @@ public class Main {
                     3 - show list of long tasks
                     4 - show list of completed tasks
                     5 - mark task as done
-                    6 - sort tasks by priority
                     9 - back""");
 
             System.out.print("input number: ");
@@ -133,10 +138,6 @@ public class Main {
                     listOfTasks.printListOfTasks(listOfTasks.getListOfCompletedTasks());
                 }
                 case 5 -> markAsDone(listOfTasks, userName);
-                case 6 -> {
-                    listOfTasks.sortTasksByPriority();
-                    System.out.println("tasks have been sorted");
-                }
                 case 9 -> {
                     saveTask(listOfTasks);
                     back = true;
@@ -186,16 +187,16 @@ public class Main {
             }
         }
         while (true) {
-            System.out.print("give priority (1-3): ");
+            System.out.print("give priority (1 (lowest) - 3 (highest): ");
             try {
                 priority = Integer.parseInt(scanner.nextLine());
                 if (1 <= priority && priority <= 3 ) {
                     break;
                 } else {
-                    System.out.println("input correct priority (1-3)");
+                    System.out.println("input correct priority (1 (lowest) - 3 (highest)");
                 }
             } catch (Exception e) {
-                System.out.println("input correct priority (1-3)");
+                System.out.println("input correct priority (1 (lowest) - 3 (highest)");
                 logger.warn(e.toString());
             }
         }
@@ -205,9 +206,10 @@ public class Main {
 
     private static void markAsDone(ListOfTasks listOfTasks, String userName){
         while (true) {
-            System.out.print("input task ID: ");
             try {
-                if(listOfTasks.markAsCompleted(Integer.parseInt(scanner.nextLine()),userName)){
+                System.out.print("input task ID: ");
+                int ID = inputInt();
+                if(listOfTasks.markAsCompleted(ID,userName)){
                     System.out.println("task marked as done");
                 } else {
                     System.out.println("there is no task with the given ID");
@@ -215,7 +217,7 @@ public class Main {
                 break;
             }
             catch (Exception e){
-                System.out.println("input correct number");
+                System.out.println("there is no task with the given ID");
                 logger.warn(e.toString());
             }
         }
@@ -289,12 +291,15 @@ public class Main {
 
         try {
             pomodoro.loadSettings();
-        }
-        catch (Exception e) {
-            System.out.println("failed to load settings");
+        } catch (IOException e) {
             logger.warn(e.toString());
         }
-        listOfTasks.loadTasksLists();
+
+        try {
+            listOfTasks.loadTasksLists();
+        } catch (IOException | ClassNotFoundException e) {
+            logger.warn(e.toString());
+        }
 
         System.out.println("--------------------");
         System.out.println("POMODORO TIMER WITH TASK LIST");
@@ -326,10 +331,11 @@ public class Main {
                 }
                 case 1 -> tasks(listOfTasks, pomodoro.getUserName());
                 case 2 -> settings(pomodoro);
-                case 8 -> {
+                case 8 -> {                                             //test mode
                     pomodoro.setWorkTimeSeconds(1);
                     pomodoro.setShortBreakTimeSeconds(1);
                     pomodoro.setLongBreakTimeSeconds(1);
+                    logger.info("settings set to test mode");
                 }
                 case 9 -> {
                     System.out.println("thanks for use");
@@ -344,7 +350,3 @@ public class Main {
         logger.info("exiting application");
     }
 }
-
-// TODO dodać logowanie sledzenia dzialania programu
-// TODO automatyczne sortowanie listy zadań
-// TODO readme

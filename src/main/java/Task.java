@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Task implements Comparable<Task> {
+public class Task implements Comparable<Task>, Serializable {
     private final int ID;
     private final String name;
     private final boolean shortTask;
