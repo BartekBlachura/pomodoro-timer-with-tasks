@@ -187,7 +187,7 @@ public class Main {
             }
         }
         while (true) {
-            System.out.print("give priority (1 (lowest) - 3 (highest): ");
+            System.out.print("give priority (1 (lowest) - 3 (highest)): ");
             try {
                 priority = Integer.parseInt(scanner.nextLine());
                 if (1 <= priority && priority <= 3 ) {
@@ -267,17 +267,17 @@ public class Main {
 
         if (!previousCompleted && listOfTasks.getListToDo().size() < 4) {
             while (true) {
-                System.out.print("how many short tasks do you want to add to the list (>=0)? ");
+                System.out.print("how many short tasks do you want to add to the list (greater than or equal to 0)? ");
                  try {
                      tasksToAdd = Integer.parseInt(scanner.nextLine());
                      if (tasksToAdd >= 0) {
                          break;
                      } else {
-                         System.out.println("input correct amount (>=0)");
+                         System.out.println("input correct amount (greater than or equal to 0)");
                      }
                  }
                  catch (Exception e) {
-                     System.out.println("input correct amount (>=0)");
+                     System.out.println("input correct amount (greater than or equal to 0)");
                      logger.warn(e.toString());
                  }
             }
