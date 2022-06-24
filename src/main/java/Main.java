@@ -11,6 +11,7 @@ public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static boolean previousCompleted = true;
     private static int tasksToAdd = 0;
+    private static boolean testMode = false;
 
     private static int inputInt() {
         try {
@@ -47,6 +48,7 @@ public class Main {
                     2 - set a short break time
                     3 - set a long break time
                     4 - set username
+                    8 - test mode enabled / disabled
                     9 - back""");
 
             System.out.print("input number: ");
@@ -67,8 +69,11 @@ public class Main {
                     logger.info("long break time was changed to: " +pomodoro.getLongBreakTimeMinutes());
                 }
                 case 4 -> setUserName(pomodoro);
+                case 8 -> setTestMode(pomodoro);
                 case 9 -> {
-                    saveSettings(pomodoro);
+                    if (!testMode) {
+                        saveSettings(pomodoro);
+                    }
                     back = true;
                 }
                 default -> System.out.println("input correct number");
@@ -105,6 +110,32 @@ public class Main {
             System.out.println("failed to save settings");
             logger.error(e.toString());
         }
+    }
+
+    public static void setTestMode(Pomodoro pomodoro) {
+        if (!testMode) {
+            pomodoro.setWorkTimeSeconds(1);
+            pomodoro.setShortBreakTimeSeconds(1);
+            pomodoro.setLongBreakTimeSeconds(1);
+            pomodoro.setUserName("TestMode");
+            System.out.println("test mode enabled");
+            logger.info("test mode enabled");
+        } else {
+            System.out.println("test mode disabled");
+            logger.info("test mode disabled");
+            try {
+                pomodoro.loadSettings();
+            } catch (IOException e) {
+                logger.warn(e.toString());
+                pomodoro.setWorkTimeMinutes(25);
+                pomodoro.setShortBreakTimeMinutes(5);
+                pomodoro.setLongBreakTimeMinutes(15);
+                pomodoro.setUserName("User");
+                System.out.println("set default settings");
+                logger.info("set default settings");
+            }
+        }
+        testMode = !testMode;
     }
 
     private static void tasks(ListOfTasks listOfTasks, String userName) {
@@ -265,7 +296,7 @@ public class Main {
         }
         previousCompleted = nonCompleted == 0;
 
-        if (!previousCompleted && listOfTasks.getListToDo().size() < 4) {
+        if (!previousCompleted && listOfTasks.getListToDo().get(0).isShortTask() && listOfTasks.getListToDo().size() < 4) {
             while (true) {
                 System.out.print("how many short tasks do you want to add to the list (greater than or equal to 0)? ");
                  try {
@@ -307,12 +338,6 @@ public class Main {
         boolean exit = false;
         while (!exit) {
             System.out.println("--------------------");
-
-            if (pomodoro.isBreakPhase()){
-                markPreviousCompleted(listOfTasks, pomodoro);
-                System.out.println("--------------------");
-            }
-
             if (pomodoro.isWorkPhase()) {
                 System.out.println("it's time to work!");
                 listOfTasks.printTaskToDo(pomodoro.getEndedWorkPhases(), previousCompleted, tasksToAdd);
@@ -327,22 +352,22 @@ public class Main {
             switch (inputInt()) {
                 case 0 -> {
                     pomodoro.start();
-                    System.out.println();
+                    if (pomodoro.isBreakPhase()){
+                        System.out.println("--------------------");
+                        markPreviousCompleted(listOfTasks, pomodoro);
+                    }
                 }
                 case 1 -> tasks(listOfTasks, pomodoro.getUserName());
                 case 2 -> settings(pomodoro);
-                case 8 -> {                                             //test mode
-                    pomodoro.setWorkTimeSeconds(1);
-                    pomodoro.setShortBreakTimeSeconds(1);
-                    pomodoro.setLongBreakTimeSeconds(1);
-                    logger.info("settings set to test mode");
-                }
                 case 9 -> {
                     System.out.println("thanks for use");
                     exit = true;
                 }
                 default -> System.out.println("input correct number");
             }
+        }
+        if (testMode) {
+            setTestMode(pomodoro);
         }
         saveSettings(pomodoro);
         saveTask(listOfTasks);
